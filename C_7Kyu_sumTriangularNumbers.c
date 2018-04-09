@@ -10,10 +10,10 @@ int sumTriangularNumbers(int n)
 	{
 		for (j=0; j<i; j++)
 		{
-			// Çà¹æÇâ (¡æ)
+			// í–‰ë°©í–¥ (â†’)
 			printf("%d", i);
 		}
-		// ¿­¹æÇâ (¡é)
+		// ì—´ë°©í–¥ (â†“)
 		printf("\n");
 	}
 }
@@ -22,7 +22,7 @@ int main()
 {
 	int n;
 
-	printf("Triangular Numbers ¼öÀÇ ÇÕÀ» ±¸ÇÕ´Ï´Ù. ¼ıÀÚ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.\n");
+	printf("Triangular Numbers ìˆ˜ì˜ í•©ì„ êµ¬í•©ë‹ˆë‹¤. ìˆ«ìë¥¼ ì…ë ¥í•˜ì„¸ìš”.\n");
 	scanf("%d", &n);
 	sumTriangularNumbers(n);
 
