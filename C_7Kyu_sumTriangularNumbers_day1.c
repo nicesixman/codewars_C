@@ -4,26 +4,31 @@
 
 int sumTriangularNumbers(int n)
 {
-	int i, j=1;
+	int i, j;
+	int next = 0;
 
-	for (i=0; i<5; i++)
+	for (i=1; i<n; i++)
 	{
-		for (j=0; j<i; j++)
+		for (j=1; j<=i; j++)
 		{
-			// Çà¹æÇâ (¡æ)
-			printf("%d", i);
+			// í–‰ë°©í–¥ (â†’)
+			next++;
+			printf("%d ", next);
 		}
-		// ¿­¹æÇâ (¡é)
-		printf("\n");
+		// ì—´ë°©í–¥ (â†“)
+		printf(" << \n");
 	}
+
+	return 0;
 }
 
 int main()
 {
 	int n;
 
-	printf("Triangular Numbers ¼öÀÇ ÇÕÀ» ±¸ÇÕ´Ï´Ù. ¼ıÀÚ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.\n");
+	printf("Triangular Numbers ìˆ˜ì˜ í•©ì„ êµ¬í•©ë‹ˆë‹¤. ìˆ«ìë¥¼ ì…ë ¥í•˜ì„¸ìš”.\n");
 	scanf("%d", &n);
+	printf("---------------------------------------------------------\n");
 	sumTriangularNumbers(n);
 
 	system("pause");
