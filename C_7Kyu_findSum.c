@@ -8,29 +8,29 @@ int findSum(int n)
 	int three_for = 0, five_for = 0, three_total = 0, five_total = 0, fifteen_for = 0, Common_Multiple_Total = 0;
 	int result;
 	
-	printf("3ÀÇ ¹è¼ö¿¡ ÇØ´çµÇ´Â ¼ö´Â { ");
+	printf("3ì˜ ë°°ìˆ˜ì— í•´ë‹¹ë˜ëŠ” ìˆ˜ëŠ” { ");
 	for (i=1; i <= (n/3); i++)
 	{
 		three_for = i * 3;
 		three_total += three_for;
 		printf("%d, ", three_for);
 	}
-	printf(" } ÀÔ´Ï´Ù.\n");
+	printf(" } ì…ë‹ˆë‹¤.\n");
 	
-	printf("5ÀÇ ¹è¼ö¿¡ ÇØ´çµÇ´Â ¼ö´Â { ");
+	printf("5ì˜ ë°°ìˆ˜ì— í•´ë‹¹ë˜ëŠ” ìˆ˜ëŠ” { ");
 	for (j=1; j <= (n/5); j++)
 	{
 		five_for = j * 5;
 		five_total += five_for;
 		printf("%d, ", five_for);
 	}
-	printf(" } ÀÔ´Ï´Ù.\n");
+	printf(" } ì…ë‹ˆë‹¤.\n");
 
-	// 3ÀÇ ¹è¼ö¿Í 5ÀÇ ¹è¼öÀÇ °ø¹è¼ö´Â 15¹è¼ö ´ÜÀ§. µû¶ó¼­ 15¹è¼ö ´ÜÀ§ÀÇ ¼ö´Â 1¹ø¸¸ ´õÇÑ´Ù.
-	// ¾Æ·¡ if ±¸¹®Àº nÀÌ 15 ÀÌ»óÀÏ °æ¿ì, 15ºÎÅÍ count 1¸¶´Ù 15¾¿ ´õÇØ¼­ ÃÑÇÕÀ» ±¸ÇÏ´Â °Í.
+	// 3ì˜ ë°°ìˆ˜ì™€ 5ì˜ ë°°ìˆ˜ì˜ ê³µë°°ìˆ˜ëŠ” 15ë°°ìˆ˜ ë‹¨ìœ„. ë”°ë¼ì„œ 15ë°°ìˆ˜ ë‹¨ìœ„ì˜ ìˆ˜ëŠ” 1ë²ˆë§Œ ë”í•œë‹¤.
+	// ì•„ë˜ if êµ¬ë¬¸ì€ nì´ 15 ì´ìƒì¼ ê²½ìš°, 15ë¶€í„° count 1ë§ˆë‹¤ 15ì”© ë”í•´ì„œ ì´í•©ì„ êµ¬í•˜ëŠ” ê²ƒ.
 	if (n >= 15)
 	{
-		printf("3ÀÇ ¹è¼ö¿Í 5ÀÇ ¹è¼ö¿¡ Áßº¹°ª(°ø¹è¼ö)ÀÌ ÀÖ½À´Ï´Ù. ÇØ´çµÇ´Â ¼ö´Â { ");
+		printf("3ì˜ ë°°ìˆ˜ì™€ 5ì˜ ë°°ìˆ˜ì— ì¤‘ë³µê°’(ê³µë°°ìˆ˜)ì´ ìˆìŠµë‹ˆë‹¤. í•´ë‹¹ë˜ëŠ” ìˆ˜ëŠ” { ");
 		for (k=1; k <= (n/15); k++)
 		{
 			fifteen_for = k * 15;
@@ -38,7 +38,7 @@ int findSum(int n)
 			printf("%d, ", fifteen_for);
 			result = three_total + five_total - Common_Multiple_Total;
 		}
-		printf(" } ÀÔ´Ï´Ù.\n");
+		printf(" } ì…ë‹ˆë‹¤.\n");
 	}
 	
 	else
@@ -46,7 +46,7 @@ int findSum(int n)
 		result = three_total + five_total;
 	}
 
-	printf("ÃÖÁ¾ °á°ú´Â %d ÀÔ´Ï´Ù.\n", result);
+	printf("ìµœì¢… ê²°ê³¼ëŠ” %d ì…ë‹ˆë‹¤.\n", result);
 	return result;
 }
 
@@ -54,7 +54,7 @@ void main()
 {
 	int n;
 
-	printf("findSum½ÇÇà. ¼ıÀÚ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.\n");
+	printf("findSumì‹¤í–‰. ìˆ«ìë¥¼ ì…ë ¥í•˜ì„¸ìš”.\n");
 	scanf("%d", &n);
 	findSum(n);
 
