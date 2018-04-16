@@ -4,9 +4,32 @@
 
 long long* step(int g, long long m, long long n)
 {
+	int i, j;
+	long long number1, number2;
+
+	// number1(ì• ìˆ˜)ì„ êµ¬í•œë‹¤.
+	for (i=1; i<=m; i++)
+	{
+		if (m%i == 0)
+		{
+			number1 = i;
+		}
+	}
+
+	// number2(ë’· ìˆ˜)ë¥¼ êµ¬í•œë‹¤.
+	for (j=m; j<=n; j++)
+	{
+		if (n%j == 0)
+		{
+			number2 = j;
+		}
+	}
+
 	printf("%d", g);
-	printf("%d", m);
-	printf("%d", n);
+	printf("%lld", m);
+	printf("%lld", n);
+	printf("%lld", number1);
+	printf("%lld", number2);
 	
 	return 0;
 }
@@ -16,14 +39,14 @@ int main()
 	int g;
 	long long m, n;
 
-	printf("2-steps primes¸¦ ±¸ÇÕ´Ï´Ù.\n");
+	printf("2-steps primesë¥¼ êµ¬í•©ë‹ˆë‹¤.\n");
 	printf("-----------------------------------------------------\n");
-	printf("Ã£À¸·Á´Â prime step(2 ÀÌ»ó)À» ±âÀÔÇÏ¼¼¿ä.\n");
+	printf("ì°¾ìœ¼ë ¤ëŠ” prime step(2 ì´ìƒ)ì„ ê¸°ì…í•˜ì„¸ìš”.\n");
 	scanf("%d", &g);
-	printf("¹üÀ§ÀÇ ½ÃÀÛ ¼ö¸¦ ±âÀÔÇÏ¼¼¿ä.\n");
-	scanf("%d", &m);
-	printf("¹üÀ§ÀÇ ¸¶Áö¸· ¼ö¸¦ ±âÀÔÇÏ¼¼¿ä.\n");
-	scanf("%d", &n);
+	printf("ë²”ìœ„ì˜ ì‹œì‘ ìˆ˜(2 ì´ìƒ)ë¥¼ ê¸°ì…í•˜ì„¸ìš”.\n");
+	scanf("%lld", &m);
+	printf("ë²”ìœ„ì˜ ë§ˆì§€ë§‰ ìˆ˜(ì‹œì‘ ìˆ˜ ì´ìƒ)ë¥¼ ê¸°ì…í•˜ì„¸ìš”.\n");
+	scanf("%lld", &n);
 	printf("-----------------------------------------------------\n");
 	step(g, m, n);
 	printf("\n");
