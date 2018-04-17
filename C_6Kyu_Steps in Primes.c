@@ -4,32 +4,52 @@
 
 long long* step(int g, long long m, long long n)
 {
-	int i, j;
+	int i, j, steps, x;
+	int yaksu = 0;
 	long long number1, number2;
 
+
+	// 단순 약수를 먼저 구해보자.
+	for (x=1; x<=m; x++)
+	{
+		if (m%x == 0)
+		{
+			yaksu = x;
+			printf("%d", yaksu);
+		}
+	}
+
+	/*
 	// number1(앞 수)을 구한다.
 	for (i=1; i<=m; i++)
 	{
-		if (m%i == 0)
+		if (m%i != 0)
 		{
 			number1 = i;
+		}
+		else
+		{
+			number1 = m;
 		}
 	}
 
 	// number2(뒷 수)를 구한다.
 	for (j=m; j<=n; j++)
 	{
-		if (n%j == 0)
+		if (n%j != 0)
 		{
 			number2 = j;
 		}
+		else
+		{
+			number2 = n;
+		}
 	}
 
-	printf("%d", g);
-	printf("%lld", m);
-	printf("%lld", n);
 	printf("%lld", number1);
 	printf("%lld", number2);
+	*/
+	printf("%d", yaksu);
 	
 	return 0;
 }
