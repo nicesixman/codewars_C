@@ -5,19 +5,22 @@
 long long* step(int g, long long m, long long n)
 {
 	int i, j, steps, x;
-	int yaksu = 0;
+	int sumYaksu = 0, yaksu;
 	long long number1, number2;
 
-
-	// 단순 약수를 먼저 구해보자.
+	// 단순 약수를 먼저 구해보자. (o(N))
 	for (x=1; x<=m; x++)
 	{
 		if (m%x == 0)
 		{
-			yaksu = x;
-			printf("%d", yaksu);
+			sumYaksu += x;
+			printf("%d", x);
 		}
 	}
+
+	// 약수 구현 완료. 이제 여기서 나열되는 숫자를 뽑아서 문제를 해결하는 방식으로 풀어보자.
+
+
 
 	/*
 	// number1(앞 수)을 구한다.
@@ -49,7 +52,7 @@ long long* step(int g, long long m, long long n)
 	printf("%lld", number1);
 	printf("%lld", number2);
 	*/
-	printf("%d", yaksu);
+	printf("%d", sumYaksu);
 	
 	return 0;
 }
