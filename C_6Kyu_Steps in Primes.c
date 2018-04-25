@@ -5,10 +5,13 @@
 long long* step(int g, long long m, long long n)
 {
 	int i, j, steps, x;
-	int sumYaksu = 0, yaksu;
+	int sumYaksu = 0;
 	long long number1, number2;
 
-	// 단순 약수를 먼저 구해보자. (o(N))
+	int Count, reminderCount;
+
+	/*
+	// 단순 약수를 먼저 구해보자. 이건 입력값에 대한 약수. (o(N))
 	for (x=1; x<=m; x++)
 	{
 		if (m%x == 0)
@@ -17,6 +20,22 @@ long long* step(int g, long long m, long long n)
 			printf("%d", x);
 		}
 	}
+	*/
+
+	// 하지만 우리가 필요한건 약수가 아니라 소수였다. [Prime = 소수]였음..
+	for (Count=2; Count<=m; Count++)			// 1은 소수가 아니므로 2부터 시작.
+	{
+		for (reminderCount=2; reminderCount<=Count; reminderCount++)
+		{
+			printf("%d ", Count);
+		}
+	}
+
+	// 이럴 경우 모든 수를 출력한다.
+	// 소수 = 자신과 1만으로 나누어지는 수. (2, 3, 5, 7, 11, ...)
+	// 일단은 2 / 3 3 / 4 4 4 / 5 5 5 5 ... 형식으로 카운트되고 있다. 수식만 만들어서 적용하면 될듯함.
+
+
 
 	// 약수 구현 완료. 이제 여기서 나열되는 숫자를 뽑아서 문제를 해결하는 방식으로 풀어보자.
 
@@ -52,7 +71,6 @@ long long* step(int g, long long m, long long n)
 	printf("%lld", number1);
 	printf("%lld", number2);
 	*/
-	printf("%d", sumYaksu);
 	
 	return 0;
 }
