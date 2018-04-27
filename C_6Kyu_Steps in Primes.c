@@ -9,37 +9,34 @@ long long* step(int g, long long m, long long n)
 	long long number1, number2;
 
 	int Count, reminderCount;
+	int isPrime = 0;
 
-	/*
-	// 단순 약수를 먼저 구해보자. 이건 입력값에 대한 약수. (o(N))
-	for (x=1; x<=m; x++)
-	{
-		if (m%x == 0)
-		{
-			sumYaksu += x;
-			printf("%d", x);
-		}
-	}
-	*/
 
-	// 하지만 우리가 필요한건 약수가 아니라 소수였다. [Prime = 소수]였음..
-	for (Count=2; Count<=m; Count++)			// 1은 소수가 아니므로 2부터 시작.
+	// 우리가 필요한건 약수가 아니라 소수였다. [Prime = 소수]였음..
+	// 1은 소수가 아니므로 2부터 시작.
+	for (Count=2; Count<=m; Count++)
 	{
+		// 나누어줄 변수를 1씩 증가시키면서 반복.
 		for (reminderCount=2; reminderCount<=Count; reminderCount++)
 		{
-			printf("%d ", Count);
+			if (Count % reminderCount == 0)
+				// isPrime이 2가 되면 소수이다. (자기 자신과 1만으로 나누어짐)
+				isPrime = isPrime + 1;
+
+			if (isPrime == 1)
+			{
+				printf("%d", Count);
+				isPrime = 0;
+			}
+			else if (isPrime > 1)
+				isPrime = 0;
 		}
 	}
 
-	// 이럴 경우 모든 수를 출력한다.
+	// 이럴 경우 2부터의 모든 수를 출력한다.
 	// 소수 = 자신과 1만으로 나누어지는 수. (2, 3, 5, 7, 11, ...)
-	// 일단은 2 / 3 3 / 4 4 4 / 5 5 5 5 ... 형식으로 카운트되고 있다. 수식만 만들어서 적용하면 될듯함.
-
-
-
-	// 약수 구현 완료. 이제 여기서 나열되는 숫자를 뽑아서 문제를 해결하는 방식으로 풀어보자.
-
-
+	// 일단은 위와같이 수식을 짤 경우 소수는 1회만 출력, 소수가 아닌 수는 여러번 출력된다.
+	// 수식을 조금만 더 다듬으면 될듯함.
 
 	/*
 	// number1(앞 수)을 구한다.
