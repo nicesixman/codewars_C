@@ -19,16 +19,20 @@ long long* step(int g, long long m, long long n)
 		// 나누어줄 변수를 1씩 증가시키면서 반복.
 		for (reminderCount=2; reminderCount<=Count; reminderCount++)
 		{
+			// 자기 자신과 1만으로 나누어지므로 for문을 도는동안 0이 두 번만 나오면 그건 소수이다.
+			// 허나 아래 수식 하나만으로는 나머지가 0이되는 모든 경우가 계산된다.
 			if (Count % reminderCount == 0)
-				// isPrime이 2가 되면 소수이다. (자기 자신과 1만으로 나누어짐)
+			{
 				isPrime = isPrime + 1;
 
-			if (isPrime == 1)
-			{
-				printf("%d", Count);
-				isPrime = 0;
+				// 따라서 키포인트는, 아래 조건문이 2번 이상 걸리는 경우에는 출력하지 않는 것이다.
+				if (isPrime == 1)
+				{
+					printf("%d ", Count);
+					isPrime = 0;
+				}
 			}
-			else if (isPrime > 1)
+			else
 				isPrime = 0;
 		}
 	}
