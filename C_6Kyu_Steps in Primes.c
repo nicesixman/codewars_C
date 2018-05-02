@@ -9,7 +9,7 @@ long long* step(int g, long long m, long long n)
 	long long number1, number2;
 
 	int Count, reminderCount;
-	int isPrime = 0;
+	int isPrime = 0, isPrimeCount = 0;
 
 
 	// 우리가 필요한건 약수가 아니라 소수였다. [Prime = 소수]였음..
@@ -17,61 +17,26 @@ long long* step(int g, long long m, long long n)
 	for (Count=2; Count<=m; Count++)
 	{
 		// 나누어줄 변수를 1씩 증가시키면서 반복.
-		for (reminderCount=2; reminderCount<=Count; reminderCount++)
+		for (reminderCount=1; reminderCount<=Count; reminderCount++)
 		{
 			// 자기 자신과 1만으로 나누어지므로 for문을 도는동안 0이 두 번만 나오면 그건 소수이다.
-			// 허나 아래 수식 하나만으로는 나머지가 0이되는 모든 경우가 계산된다.
+			// (즉, isPrime == 2일 경우, 그건 소수이다.)
+			// 허나 아래 조건문 수식 하나만으로는 나머지가 0이되는 모든 경우가 계산된다.
 			if (Count % reminderCount == 0)
-			{
 				isPrime = isPrime + 1;
-
-				// 따라서 키포인트는, 아래 조건문이 2번 이상 걸리는 경우에는 출력하지 않는 것이다.
-				if (isPrime == 1)
-				{
-					printf("%d ", Count);
-					isPrime = 0;
-				}
-			}
+			// 예외처리를 하여 연산속도 증가.
 			else
-				isPrime = 0;
+				break;
 		}
+
+		// 해결 방법으로써는, for문이 마무리 된 후 isPrime == 2일 때만 출력하게끔 전환하면 된다.
+		if (isPrime == 2)
+		{
+			printf("%d ", Count);
+		}
+		// isPrime = 0으로 다시 초기화.
+		isPrime = 0;
 	}
-
-	// 이럴 경우 2부터의 모든 수를 출력한다.
-	// 소수 = 자신과 1만으로 나누어지는 수. (2, 3, 5, 7, 11, ...)
-	// 일단은 위와같이 수식을 짤 경우 소수는 1회만 출력, 소수가 아닌 수는 여러번 출력된다.
-	// 수식을 조금만 더 다듬으면 될듯함.
-
-	/*
-	// number1(앞 수)을 구한다.
-	for (i=1; i<=m; i++)
-	{
-		if (m%i != 0)
-		{
-			number1 = i;
-		}
-		else
-		{
-			number1 = m;
-		}
-	}
-
-	// number2(뒷 수)를 구한다.
-	for (j=m; j<=n; j++)
-	{
-		if (n%j != 0)
-		{
-			number2 = j;
-		}
-		else
-		{
-			number2 = n;
-		}
-	}
-
-	printf("%lld", number1);
-	printf("%lld", number2);
-	*/
 	
 	return 0;
 }
