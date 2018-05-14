@@ -4,17 +4,22 @@
 
 long long* step(int g, long long m, long long n)
 {
-	int i, j, steps, x;
-	int sumYaksu = 0;
-	long long number1, number2;
+	// ★ 진척상황
+	/*
+	1. int g / long long m / long long n은 모두 작동한다.
+	2. 단, 현재는 위 작동점을 기준으로 모든 소수를 출력한다.
+	3. 따라서 앞으로 해야할 작업은 끝 두 개의 소수만 출력하는 것.
+	4. 위 작업들이 끝나면 마지막으로 else if (steps > g)의 케이스(null 경우)도 추가해줘야 한다.
+	*/
 
+
+	int isPrime = 0, steps = -1;	// steps = -1로 초기화 하는 이유는 첫 번째 소수를 step=0으로 계산하기 위함.
 	int Count, reminderCount;
-	int isPrime = 0, isPrimeCount = 0;
 
 
 	// 우리가 필요한건 약수가 아니라 소수였다. [Prime = 소수]였음..
-	// 1은 소수가 아니므로 2부터 시작.
-	for (Count=2; Count<=m; Count++)
+	// 1은 소수가 아니므로 2부터 시작하여야하지만, step함수는 start of the search 수(m)가 있다.
+	for (Count=m; Count<=n; Count++)
 	{
 		// 나누어줄 변수를 1씩 증가시키면서 반복.
 		for (reminderCount=1; reminderCount<=Count; reminderCount++)
@@ -25,19 +30,28 @@ long long* step(int g, long long m, long long n)
 			if (Count % reminderCount == 0)
 				isPrime = isPrime + 1;
 			// 예외처리를 하여 연산속도 증가.
+			// ...를 하고 싶었으나 아래 수식을 추가하면 계산식이 안맞는다. 일단 skip.
+			/*
 			else
 				break;
+			*/
 		}
 
 		// 해결 방법으로써는, for문이 마무리 된 후 isPrime == 2일 때만 출력하게끔 전환하면 된다.
+		// 또한, 이 부분에서 int g(step) 계산 가능.
 		if (isPrime == 2)
 		{
 			printf("%d ", Count);
+			steps = steps + 1;
 		}
 		// isPrime = 0으로 다시 초기화.
 		isPrime = 0;
+
+		// 입력받았던 g를 바탕으로 함수를 빠져나오는 수식.
+		if (steps >= g)
+			return 0;
 	}
-	
+
 	return 0;
 }
 
@@ -55,7 +69,7 @@ int main()
 	printf("범위의 마지막 수(시작 수 이상)를 기입하세요.\n");
 	scanf("%lld", &n);
 	printf("-----------------------------------------------------\n");
-	step(g, m, n);
+	step(g, m, n);		// 함수 실행
 	printf("\n");
 	system("pause");
 
