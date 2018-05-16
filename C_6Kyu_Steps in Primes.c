@@ -8,13 +8,13 @@ long long* step(int g, long long m, long long n)
 	/*
 	1. int g / long long m / long long n은 모두 작동한다.
 	2. 단, 현재는 위 작동점을 기준으로 모든 소수를 출력한다.
-	3. 따라서 앞으로 해야할 작업은 끝 두 개의 소수만 출력하는 것.
+	3. 따라서 앞으로 해야할 작업은 (마지막 소수 - 마지막 전 소수 = g)인 케이스를 구별하는 것.
 	4. 위 작업들이 끝나면 마지막으로 else if (steps > g)의 케이스(null 경우)도 추가해줘야 한다.
 	*/
 
 
-	int isPrime = 0, steps = -1;	// steps = -1로 초기화 하는 이유는 첫 번째 소수를 step=0으로 계산하기 위함.
-	int Count, reminderCount;
+	int isPrime = 0;
+	int Count, reminderCount, holdCount;
 
 
 	// 우리가 필요한건 약수가 아니라 소수였다. [Prime = 소수]였음..
@@ -37,19 +37,12 @@ long long* step(int g, long long m, long long n)
 			*/
 		}
 
-		// 해결 방법으로써는, for문이 마무리 된 후 isPrime == 2일 때만 출력하게끔 전환하면 된다.
-		// 또한, 이 부분에서 int g(step) 계산 가능.
+		// 모든 경우가 계산되는 것의 해결 방법으로써
+		// for문이 마무리 된 후 isPrime == 2일 때만 출력하게끔 전환하면 된다.
 		if (isPrime == 2)
-		{
 			printf("%d ", Count);
-			steps = steps + 1;
-		}
 		// isPrime = 0으로 다시 초기화.
 		isPrime = 0;
-
-		// 입력받았던 g를 바탕으로 함수를 빠져나오는 수식.
-		if (steps >= g)
-			return 0;
 	}
 
 	return 0;
