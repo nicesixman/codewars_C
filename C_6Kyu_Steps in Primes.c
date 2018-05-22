@@ -1,20 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #pragma warning(disable:4996)
 
 long long* step(int g, long long m, long long n)
 {
-	// ★ 진척상황
-	// 1. 마지막단계로 return을 2개 반환하여 codewars 사이트에서 계산되기만 하면 된다.
-
-
 	int isPrime = 0;
 	int Count, reminderCount;
-	int matrix[10000], matrixCount = 0, i;
+	int matrix[10000], matrixCount = 0;
 	// 동적 배열은 C++ 사용할 때 시도하고, 현재(C)는 코드 구조를 쉽게 읽기 위해 정적 배열로 선언.
+	int arraySize = 0;								// ★ for debug
 
-
-	// 1은 소수가 아니므로 2부터 시작하여야하지만, step함수는 start of the search 수(m)가 있다.
+	// step함수는 start of the search(m) ~ end of the search(n)가 있다.
 	for (Count=m; Count<=n; Count++)
 	{
 		// 나누어줄 변수를 1씩 증가시키면서 반복.
@@ -22,14 +19,11 @@ long long* step(int g, long long m, long long n)
 		{
 			// 자기 자신과 1만으로 나누어지므로 for문을 도는동안 0이 두 번만 나오면 그건 소수이다.
 			// (즉, isPrime == 2일 경우, 그건 소수이다.)
-			// 허나 아래 조건문 수식 하나만으로는 나머지가 0이되는 모든 경우가 계산된다.
+			// 허나 아래 조건식 하나만으로는 나머지가 0이되는 모든 경우가 계산된다.
 			if (Count % reminderCount == 0)
 				isPrime = isPrime + 1;
-			// (예외처리를 하여 연산속도 증가를 고려했으나 아래 수식을 추가하면 계산식이 안맞는다. 일단 skip.)
-			/*
-			else
-				break;
-			*/
+
+			arraySize = arraySize + 1;				// ★ for debug
 		}
 
 		// 모든 경우가 계산되는 것의 해결 방법으로써
@@ -42,7 +36,29 @@ long long* step(int g, long long m, long long n)
 			if (matrixCount >= 2 && g == (matrix[matrixCount - 1] - matrix[matrixCount - 2]))
 			{
 				printf("%d, %d", matrix[matrixCount - 2], matrix[matrixCount - 1]);
-				return 0;
+
+				// 계산한 값 return을 위함.
+				int* result[2] = { matrix[matrixCount - 2], matrix[matrixCount - 1] };
+				printf("\n연산 Count: %d", arraySize); // ★ for debug
+				return result;
+			}
+			else if (n == Count)
+			{
+				int* result[2] = { 0, 0 };
+				printf("%d %d", result[0], result[1]);
+				printf("\n연산 Count: %d", arraySize); // ★ for debug
+				return result;
+			}
+		}
+		// 두 약수의 차가 prime step(g)과 일치하는 수가 없을 때.
+		else
+		{
+			if (n == Count)
+			{
+				int* result[2] = { 0, 0 };
+				printf("%d %d", result[0], result[1]);
+				printf("\n연산 Count: %d", arraySize); // ★ for debug
+				return result;
 			}
 		}
 		// isPrime = 0으로 다시 초기화.
