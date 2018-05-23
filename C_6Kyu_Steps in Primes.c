@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #pragma warning(disable:4996)
 
 long long* step(int g, long long m, long long n)
@@ -9,7 +7,6 @@ long long* step(int g, long long m, long long n)
 	int Count, reminderCount;
 	int matrix[10000], matrixCount = 0;
 	// 동적 배열은 C++ 사용할 때 시도하고, 현재(C)는 코드 구조를 쉽게 읽기 위해 정적 배열로 선언.
-	int arraySize = 0;								// ★ for debug
 
 	// step함수는 start of the search(m) ~ end of the search(n)가 있다.
 	for (Count=m; Count<=n; Count++)
@@ -23,32 +20,33 @@ long long* step(int g, long long m, long long n)
 			if (Count % reminderCount == 0)
 				isPrime = isPrime + 1;
 
-			arraySize = arraySize + 1;				// ★ for debug
+			// 연산속도 향상을 위한 예외처리.
+			if (isPrime > 2)
+				break;
 		}
 
 		// 모든 경우가 계산되는 것의 해결 방법으로써
 		// 안쪽 for문이 마무리 된 후 isPrime == 2일 때만 배열에 수를 저장하게끔 코드를 짜면 된다.
 		if (isPrime == 2)
 		{
-			// printf("%d ", Count);		// 배열 미사용시 소수 전체출력.
 			matrix[matrixCount] = Count;
 			matrixCount = matrixCount + 1;
 			if (matrixCount >= 2 && g == (matrix[matrixCount - 1] - matrix[matrixCount - 2]))
 			{
-				printf("%d, %d", matrix[matrixCount - 2], matrix[matrixCount - 1]);
-
-				// 계산한 값 return을 위함.
+				// 계산한 값 return.
 				int* result[2] = { matrix[matrixCount - 2], matrix[matrixCount - 1] };
-				printf("\n연산 Count: %d", arraySize); // ★ for debug
+				printf("%d, %d", matrix[matrixCount - 2], matrix[matrixCount - 1]);
 				return result;
 			}
 			else if (n == Count)
 			{
 				int* result[2] = { 0, 0 };
 				printf("%d %d", result[0], result[1]);
-				printf("\n연산 Count: %d", arraySize); // ★ for debug
 				return result;
 			}
+			// ★ 마지막 진행건이 남은 상태.
+			// (6, 100, 110) --> 101, 107이나 (3, 2, 5) --> 2, 5 등 처럼.
+			// 바로 직전의 두 수 차이만 구하는 것이 아니라 prime step(g)를 고려한 또다른 수식을 작성하여야 한다.
 		}
 		// 두 약수의 차가 prime step(g)과 일치하는 수가 없을 때.
 		else
@@ -57,7 +55,6 @@ long long* step(int g, long long m, long long n)
 			{
 				int* result[2] = { 0, 0 };
 				printf("%d %d", result[0], result[1]);
-				printf("\n연산 Count: %d", arraySize); // ★ for debug
 				return result;
 			}
 		}
