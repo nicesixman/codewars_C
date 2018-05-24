@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <windows.h>
 #pragma warning(disable:4996)
 
 long long* step(int g, long long m, long long n)
@@ -7,12 +8,13 @@ long long* step(int g, long long m, long long n)
 	int Count, reminderCount;
 	int matrix[10000], matrixCount = 0;
 	// 동적 배열은 C++ 사용할 때 시도하고, 현재(C)는 코드 구조를 쉽게 읽기 위해 정적 배열로 선언.
+	int betweenCount;
 
 	// step함수는 start of the search(m) ~ end of the search(n)가 있다.
-	for (Count=m; Count<=n; Count++)
+	for (Count = m; Count <= n; Count++)
 	{
 		// 나누어줄 변수를 1씩 증가시키면서 반복.
-		for (reminderCount=1; reminderCount<=Count; reminderCount++)
+		for (reminderCount = 1; reminderCount <= Count; reminderCount++)
 		{
 			// 자기 자신과 1만으로 나누어지므로 for문을 도는동안 0이 두 번만 나오면 그건 소수이다.
 			// (즉, isPrime == 2일 경우, 그건 소수이다.)
@@ -38,23 +40,40 @@ long long* step(int g, long long m, long long n)
 				printf("%d, %d", matrix[matrixCount - 2], matrix[matrixCount - 1]);
 				return result;
 			}
+			// (6, 100, 110) --> 101, 107이나 (3, 2, 5) --> 2, 5 등 처럼.
+			// 맞닿은 두 소수 차이만 구하는 것이 아니라 prime step(g)를 고려한 또다른 수식을 작성하여야 한다.
+			// else if로 재차 구분시켜놓는 이유는, 비효율적으로 for문을 진입하지 않게 하기 위함이다.
+			else if (matrixCount >= 2 && g != (matrix[matrixCount - 1] - matrix[matrixCount - 2]))
+			{
+				for (betweenCount = 3; betweenCount <= g; betweenCount++)
+				{
+					if (matrixCount >= 2 && g == (matrix[matrixCount - 1] - matrix[matrixCount - betweenCount]))
+					{
+						int* result[2] = { matrix[matrixCount - betweenCount], matrix[matrixCount - 1] };
+						printf("%d, %d", matrix[matrixCount - betweenCount], matrix[matrixCount - 1]);
+						return result;
+					}
+				}
+			}
+			// prime step(g)가 끝까지 도달했으나 일치하는 소수를 찾지 못한 경우.
 			else if (n == Count)
 			{
 				int* result[2] = { 0, 0 };
 				printf("%d %d", result[0], result[1]);
+				printf("test1");	// ★테스트용. 2, 5, 5 걸림
 				return result;
 			}
-			// ★ 마지막 진행건이 남은 상태.
-			// (6, 100, 110) --> 101, 107이나 (3, 2, 5) --> 2, 5 등 처럼.
-			// 바로 직전의 두 수 차이만 구하는 것이 아니라 prime step(g)를 고려한 또다른 수식을 작성하여야 한다.
 		}
 		// 두 약수의 차가 prime step(g)과 일치하는 수가 없을 때.
 		else
 		{
+			// ★ 다른건 다 되는데 왜 2, 4900, 4919는 여기에 걸리지 않는걸까? 정말로 마지막 미해결 과제.
+			// 4889 - 4903 - 4909 - 4919
 			if (n == Count)
 			{
 				int* result[2] = { 0, 0 };
 				printf("%d %d", result[0], result[1]);
+				printf("test2");	// ★테스트용. 11, 30000, 100000 걸림
 				return result;
 			}
 		}
