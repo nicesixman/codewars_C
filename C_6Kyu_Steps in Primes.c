@@ -39,6 +39,7 @@ long long* step(int g, long long m, long long n)
 				int* result[2] = { matrix[matrixCount - 2], matrix[matrixCount - 1] };
 				printf("%d, %d", matrix[matrixCount - 2], matrix[matrixCount - 1]);
 				return result;
+				matrixCount = 0;
 			}
 			// (6, 100, 110) --> 101, 107이나 (3, 2, 5) --> 2, 5 등 처럼.
 			// 맞닿은 두 소수 차이만 구하는 것이 아니라 prime step(g)를 고려한 또다른 수식을 작성하여야 한다.
@@ -52,6 +53,7 @@ long long* step(int g, long long m, long long n)
 						int* result[2] = { matrix[matrixCount - betweenCount], matrix[matrixCount - 1] };
 						printf("%d, %d", matrix[matrixCount - betweenCount], matrix[matrixCount - 1]);
 						return result;
+						matrixCount = 0;
 					}
 				}
 			}
@@ -60,23 +62,24 @@ long long* step(int g, long long m, long long n)
 			{
 				int* result[2] = { 0, 0 };
 				printf("%d %d", result[0], result[1]);
-				printf("test1");	// ★테스트용. 2, 5, 5 걸림
 				return result;
+				matrixCount = 0;
 			}
 		}
 		// 두 약수의 차가 prime step(g)과 일치하는 수가 없을 때.
 		else
 		{
-			// ★ 다른건 다 되는데 왜 2, 4900, 4919는 여기에 걸리지 않는걸까? 정말로 마지막 미해결 과제.
-			// 4889 - 4903 - 4909 - 4919
 			if (n == Count)
 			{
 				int* result[2] = { 0, 0 };
 				printf("%d %d", result[0], result[1]);
-				printf("test2");	// ★테스트용. 11, 30000, 100000 걸림
 				return result;
+				matrixCount = 0;
 			}
 		}
+		// ★ 다른건 다 되는데 왜 2, 4900, 4919는 위 수식에 걸리지 않는걸까? 정말로 마지막 미해결 과제.
+		// 한 가지 알아낸 사실: end of the search(n)이 소수이면 prime step(g)에 걸리지 않을 때, 출력되지 않음.
+
 		// isPrime = 0으로 다시 초기화.
 		isPrime = 0;
 	}
