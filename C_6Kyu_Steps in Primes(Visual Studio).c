@@ -7,10 +7,10 @@ long long* step(int g, long long m, long long n)
 	int isPrime = 0;
 	int Count, reminderCount;
 	int matrix[100000], result[2], matrixCount = 0;
-	// µ¿Àû ¹è¿­Àº C++ »ç¿ëÇÒ ¶§ ½ÃµµÇÏ°í, ÇöÀç(C)´Â ÄÚµå ±¸Á¶¸¦ ½±°Ô ÀĞ±â À§ÇØ Á¤Àû ¹è¿­·Î ¼±¾ğ.
+	// ë™ì  ë°°ì—´ì€ C++ ì‚¬ìš©í•  ë•Œ ì‹œë„í•˜ê³ , í˜„ì¬(C)ëŠ” ì½”ë“œ êµ¬ì¡°ë¥¼ ì‰½ê²Œ ì½ê¸° ìœ„í•´ ì •ì  ë°°ì—´ë¡œ ì„ ì–¸.
 	int betweenCount;
 
-	// m > n À¸·Î ÀÔ·ÂÇßÀ» ¶§ÀÇ ¿¹¿ÜÃ³¸®.
+	// m > n ìœ¼ë¡œ ì…ë ¥í–ˆì„ ë•Œì˜ ì˜ˆì™¸ì²˜ë¦¬.
 	// ex) (2, 5101, 103) --> 0, 0
 	if (m > n)
 	{
@@ -18,30 +18,30 @@ long long* step(int g, long long m, long long n)
 		printf("%d %d\n", result[0], result[1]);
 		return result;
 	}
-	// stepÇÔ¼ö´Â start of the search(m) ~ end of the search(n)°¡ ÀÖ´Ù.
+	// stepí•¨ìˆ˜ëŠ” start of the search(m) ~ end of the search(n)ê°€ ìˆë‹¤.
 	for (Count = m; Count <= n; Count++)
 	{
-		// ³ª´©¾îÁÙ º¯¼ö¸¦ 1¾¿ Áõ°¡½ÃÅ°¸é¼­ ¹İº¹.
+		// ë‚˜ëˆ„ì–´ì¤„ ë³€ìˆ˜ë¥¼ 1ì”© ì¦ê°€ì‹œí‚¤ë©´ì„œ ë°˜ë³µ.
 		for (reminderCount = 1; reminderCount <= Count; reminderCount++)
 		{
-			// ÀÚ±â ÀÚ½Å°ú 1¸¸À¸·Î ³ª´©¾îÁö¹Ç·Î for¹®À» µµ´Âµ¿¾È 0ÀÌ µÎ ¹ø¸¸ ³ª¿À¸é ±×°Ç ¼Ò¼öÀÌ´Ù.
-			// (Áï, isPrime == 2ÀÏ °æ¿ì, ±×°Ç ¼Ò¼öÀÌ´Ù.)
-			// Çã³ª ¾Æ·¡ Á¶°Ç½Ä ÇÏ³ª¸¸À¸·Î´Â ³ª¸ÓÁö°¡ 0ÀÌµÇ´Â ¸ğµç °æ¿ì°¡ °è»êµÈ´Ù.
+			// ìê¸° ìì‹ ê³¼ 1ë§Œìœ¼ë¡œ ë‚˜ëˆ„ì–´ì§€ë¯€ë¡œ forë¬¸ì„ ë„ëŠ”ë™ì•ˆ 0ì´ ë‘ ë²ˆë§Œ ë‚˜ì˜¤ë©´ ê·¸ê±´ ì†Œìˆ˜ì´ë‹¤.
+			// (ì¦‰, isPrime == 2ì¼ ê²½ìš°, ê·¸ê±´ ì†Œìˆ˜ì´ë‹¤.)
+			// í—ˆë‚˜ ì•„ë˜ ì¡°ê±´ì‹ í•˜ë‚˜ë§Œìœ¼ë¡œëŠ” ë‚˜ë¨¸ì§€ê°€ 0ì´ë˜ëŠ” ëª¨ë“  ê²½ìš°ê°€ ê³„ì‚°ëœë‹¤.
 			if (Count % reminderCount == 0)
 				isPrime = isPrime + 1;
 
-			// ¿¬»ê¼Óµµ Çâ»óÀ» À§ÇÑ ¿¹¿ÜÃ³¸®.
+			// ì—°ì‚°ì†ë„ í–¥ìƒì„ ìœ„í•œ ì˜ˆì™¸ì²˜ë¦¬.
 			if (isPrime > 2)
 				break;
 		}
 
-		// ¸ğµç °æ¿ì°¡ °è»êµÇ´Â °ÍÀÇ ÇØ°á ¹æ¹ıÀ¸·Î½á
-		// ¾ÈÂÊ for¹®ÀÌ ¸¶¹«¸® µÈ ÈÄ isPrime == 2ÀÏ ¶§¸¸ ¹è¿­¿¡ ¼ö¸¦ ÀúÀåÇÏ°Ô²û ÄÚµå¸¦ Â¥¸é µÈ´Ù.
+		// ëª¨ë“  ê²½ìš°ê°€ ê³„ì‚°ë˜ëŠ” ê²ƒì˜ í•´ê²° ë°©ë²•ìœ¼ë¡œì¨
+		// ì•ˆìª½ forë¬¸ì´ ë§ˆë¬´ë¦¬ ëœ í›„ isPrime == 2ì¼ ë•Œë§Œ ë°°ì—´ì— ìˆ˜ë¥¼ ì €ì¥í•˜ê²Œë” ì½”ë“œë¥¼ ì§œë©´ ëœë‹¤.
 		if (isPrime == 2)
 		{
 			matrix[matrixCount] = Count;
 			matrixCount = matrixCount + 1;
-			// Normal case. ¸Â´êÀº µÎ ¼Ò¼ö Â÷ÀÌ¸¦ °è»ê.
+			// Normal case. ë§ë‹¿ì€ ë‘ ì†Œìˆ˜ ì°¨ì´ë¥¼ ê³„ì‚°.
 			// ex) (2, 100, 110) --> 101, 103
 			if (matrixCount >= 2 && g == (matrix[matrixCount - 1] - matrix[matrixCount - 2]))
 			{
@@ -52,10 +52,10 @@ long long* step(int g, long long m, long long n)
 			}
 			// ex1) (6, 100, 110) --> 101, 107
 			// ex2) (3, 2, 5) --> 2, 5
-			// ¸Â´êÀº µÎ ¼Ò¼ö Â÷ÀÌ¸¸ ±¸ÇÏ´Â °ÍÀÌ ¾Æ´Ï¶ó prime step(g)¸¦ °í·ÁÇÑ ¶Ç´Ù¸¥ ¼ö½ÄÀ» ÀÛ¼ºÇÏ¿©¾ß ÇÑ´Ù.
-			// else if·Î ÀçÂ÷ ±¸ºĞ½ÃÄÑ³õ´Â ÀÌÀ¯´Â, ºñÈ¿À²ÀûÀ¸·Î for¹®À» ÁøÀÔÇÏÁö ¾Ê°Ô ÇÏ±â À§ÇÔÀÌ´Ù.
-			// ¡Úcodewars¿¡¼­´Â ¿ÖÀÎÁö ÀÌ ºÎºĞ¿¡¼­ (3, 2, 5) --> 0, 3À¸·Î ÀÎ½ÄÇÑ´Ù.
-			// ¿øÀÎÀº gcc ¹®¹ı°ú VS ¹®¹ıÀÇ Â÷ÀÌÁ¡¿¡¼­ ºñ·ÔÇÏ´Â °Í.
+			// ë§ë‹¿ì€ ë‘ ì†Œìˆ˜ ì°¨ì´ë§Œ êµ¬í•˜ëŠ” ê²ƒì´ ì•„ë‹ˆë¼ prime step(g)ë¥¼ ê³ ë ¤í•œ ë˜ë‹¤ë¥¸ ìˆ˜ì‹ì„ ì‘ì„±í•˜ì—¬ì•¼ í•œë‹¤.
+			// else ifë¡œ ì¬ì°¨ êµ¬ë¶„ì‹œì¼œë†“ëŠ” ì´ìœ ëŠ”, ë¹„íš¨ìœ¨ì ìœ¼ë¡œ forë¬¸ì„ ì§„ì…í•˜ì§€ ì•Šê²Œ í•˜ê¸° ìœ„í•¨ì´ë‹¤.
+			// â˜…codewarsì—ì„œëŠ” ì™œì¸ì§€ ì´ ë¶€ë¶„ì—ì„œ (3, 2, 5) --> 0, 3ìœ¼ë¡œ ì¸ì‹í•œë‹¤.
+			// ì›ì¸ì€ gcc ë¬¸ë²•ê³¼ VS ë¬¸ë²•ì˜ ì°¨ì´ì ì—ì„œ ë¹„ë¡¯í•˜ëŠ” ê²ƒ.
 			else if (matrixCount >= 2 && g != (matrix[matrixCount - 1] - matrix[matrixCount - 2]))
 			{
 				for (betweenCount = 3; betweenCount <= g; betweenCount++)
@@ -68,7 +68,7 @@ long long* step(int g, long long m, long long n)
 						matrixCount = 0;
 					}
 				}
-				// start of the search(m) ~ end of the search(n) ³» ¼Ò¼ö°¡ 2°³ ÀÌ»óÀÌÁö¸¸ prime step(g)¿¡ °É¸®Áö ¾ÊÀ» ¶§.
+				// start of the search(m) ~ end of the search(n) ë‚´ ì†Œìˆ˜ê°€ 2ê°œ ì´ìƒì´ì§€ë§Œ prime step(g)ì— ê±¸ë¦¬ì§€ ì•Šì„ ë•Œ.
 				// ex) (2, 4900, 4919) --> 0, 0
 				if (n == Count)
 				{
@@ -78,7 +78,7 @@ long long* step(int g, long long m, long long n)
 					matrixCount = 0;
 				}
 			}
-			// start of the search(m), end of the search(n) °¡ ÀÏÄ¡ÇÏ´Â ¼ö ÀÏ ¶§.
+			// start of the search(m), end of the search(n) ê°€ ì¼ì¹˜í•˜ëŠ” ìˆ˜ ì¼ ë•Œ.
 			// ex) (2, 5, 5) --> 0, 0
 			else if (n == Count)
 			{
@@ -90,7 +90,7 @@ long long* step(int g, long long m, long long n)
 		}
 		else
 		{
-			// start of the search(m) ~ end of the search(n) ³» ¸ğµç ¼Ò¼öÀÇ Â÷ Áß prime step(g)°ú ÀÏÄ¡ÇÏ´Â ¼ö°¡ ¾øÀ» ¶§.
+			// start of the search(m) ~ end of the search(n) ë‚´ ëª¨ë“  ì†Œìˆ˜ì˜ ì°¨ ì¤‘ prime step(g)ê³¼ ì¼ì¹˜í•˜ëŠ” ìˆ˜ê°€ ì—†ì„ ë•Œ.
 			// ex) (11, 30000, 100000) --> 0, 0
 			if (n == Count)
 			{
@@ -100,7 +100,7 @@ long long* step(int g, long long m, long long n)
 				matrixCount = 0;
 			}
 		}
-		// isPrime = 0À¸·Î ´Ù½Ã ÃÊ±âÈ­.
+		// isPrime = 0ìœ¼ë¡œ ë‹¤ì‹œ ì´ˆê¸°í™”.
 		isPrime = 0;
 	}
 	return 0;
@@ -111,16 +111,16 @@ int main()
 	int g;
 	long long m, n;
 
-	printf("2-steps primes¸¦ ±¸ÇÕ´Ï´Ù.\n");
+	printf("2-steps primesë¥¼ êµ¬í•©ë‹ˆë‹¤.\n");
 	printf("-----------------------------------------------------\n");
-	printf("Ã£À¸·Á´Â prime step(2 ÀÌ»ó)À» ±âÀÔÇÏ¼¼¿ä.\n");
+	printf("ì°¾ìœ¼ë ¤ëŠ” prime step(2 ì´ìƒ)ì„ ê¸°ì…í•˜ì„¸ìš”.\n");
 	scanf("%d", &g);
-	printf("¹üÀ§ÀÇ ½ÃÀÛ ¼ö(2 ÀÌ»ó)¸¦ ±âÀÔÇÏ¼¼¿ä.\n");
+	printf("ë²”ìœ„ì˜ ì‹œì‘ ìˆ˜(2 ì´ìƒ)ë¥¼ ê¸°ì…í•˜ì„¸ìš”.\n");
 	scanf("%lld", &m);
-	printf("¹üÀ§ÀÇ ¸¶Áö¸· ¼ö(½ÃÀÛ ¼ö ÀÌ»ó)¸¦ ±âÀÔÇÏ¼¼¿ä.\n");
+	printf("ë²”ìœ„ì˜ ë§ˆì§€ë§‰ ìˆ˜(ì‹œì‘ ìˆ˜ ì´ìƒ)ë¥¼ ê¸°ì…í•˜ì„¸ìš”.\n");
 	scanf("%lld", &n);
 	printf("-----------------------------------------------------\n");
-	step(g, m, n);		// ÇÔ¼ö ½ÇÇà
+	step(g, m, n);		// í•¨ìˆ˜ ì‹¤í–‰
 	system("pause");
 
 	return 0;
