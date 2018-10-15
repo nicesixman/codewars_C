@@ -41,7 +41,7 @@ long long* step(int g, long long m, long long n)
 		{
 			matrix[matrixCount] = Count;
 			matrixCount = matrixCount + 1;
-			// Normal case. 맞닿은 두 소수 차이를 계산.
+			// Case 1. 맞닿은 두 소수 차이를 계산.
 			// ex) (2, 100, 110) --> 101, 103
 			if (matrixCount >= 2 && g == (matrix[matrixCount - 1] - matrix[matrixCount - 2]))
 			{
@@ -50,16 +50,27 @@ long long* step(int g, long long m, long long n)
 				return result;
 				matrixCount = 0;
 			}
-			// ex1) (6, 100, 110) --> 101, 107
-			// ex2) (3, 2, 5) --> 2, 5
-			// 맞닿은 두 소수 차이만 구하는 것이 아니라 prime step(g)를 고려한 또다른 수식을 작성하여야 한다.
+			// Case 2. 맞닿은 두 소수 차이만 구하는 것이 아니라 prime step(g)를 고려한 또다른 수식을 각각 작성하여야 한다.
 			// else if로 재차 구분시켜놓는 이유는, 비효율적으로 for문을 진입하지 않게 하기 위함이다.
-			// ★codewars에서는 왜인지 이 부분에서 (3, 2, 5) --> 0, 3으로 인식한다.
-			// 원인은 gcc 문법과 VS 문법의 차이점에서 비롯하는 것.
+			// ex1) (6, 100, 110) --> 101, 107
+			// ex2) (3, 2, 5) --> 2, 5 ★codewars(gcc)에서는 이 부분에서 (3, 2, 5) --> 0, 3으로 출력한다. 2,3,107,30047,30059,30071, ...
 			else if (matrixCount >= 2 && g != (matrix[matrixCount - 1] - matrix[matrixCount - 2]))
 			{
 				for (betweenCount = 3; betweenCount <= g; betweenCount++)
 				{
+					// 원인은 gcc 문법과 VS 문법의 차이점에서 비롯하는 것.
+					/*
+					// gcc용 디버그 코드.
+					// prime step(g)가 start of the search(m) 보다 큰 경우 마지막 소수를 제대로 구하지 못하는 것을 보완해야 한다. (미완성)
+					if ((g > m) && matrixCount >= 2)
+					{
+						int* result[2] = { matrix[matrixCount - betweenCount], matrix[matrixCount - 1] };
+						printf("%d, %d\n", matrix[matrixCount - betweenCount], matrix[matrixCount - 1]);
+						return result;
+						matrixCount = 0;
+					}
+					*/
+					// VS용 코드.
 					if (matrixCount >= 2 && g == (matrix[matrixCount - 1] - matrix[matrixCount - betweenCount]))
 					{
 						int* result[2] = { matrix[matrixCount - betweenCount], matrix[matrixCount - 1] };
@@ -68,7 +79,7 @@ long long* step(int g, long long m, long long n)
 						matrixCount = 0;
 					}
 				}
-				// start of the search(m) ~ end of the search(n) 내 소수가 2개 이상이지만 prime step(g)에 걸리지 않을 때.
+				// Case 3. start of the search(m) ~ end of the search(n) 내 소수가 2개 이상이지만 prime step(g)에 걸리지 않을 때.
 				// ex) (2, 4900, 4919) --> 0, 0
 				if (n == Count)
 				{
@@ -78,7 +89,7 @@ long long* step(int g, long long m, long long n)
 					matrixCount = 0;
 				}
 			}
-			// start of the search(m), end of the search(n) 가 일치하는 수 일 때.
+			// Case 4. start of the search(m), end of the search(n) 가 일치하는 수 일 때.
 			// ex) (2, 5, 5) --> 0, 0
 			else if (n == Count)
 			{
@@ -90,7 +101,7 @@ long long* step(int g, long long m, long long n)
 		}
 		else
 		{
-			// start of the search(m) ~ end of the search(n) 내 모든 소수의 차 중 prime step(g)과 일치하는 수가 없을 때.
+			// Case 5. start of the search(m) ~ end of the search(n) 내 모든 소수의 차 중 prime step(g)과 일치하는 수가 없을 때.
 			// ex) (11, 30000, 100000) --> 0, 0
 			if (n == Count)
 			{
