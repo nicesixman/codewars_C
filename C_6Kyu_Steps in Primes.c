@@ -2,20 +2,26 @@
 #include <windows.h>
 #pragma warning(disable:4996)
 
+// 전역변수를 사용하는 이유는 배열값을 return받기 위함.
+// int로 선언할 시 prime step(g)가 start of the search(m) 보다 큰 경우 마지막 소수를 제대로 구하지 못한다.
+// 아마 컴파일러 내 형변환 과정에서 VS는 잘 변환시켜주는 반면, gcc는 버그가 발생하는 듯 함. (추측)
+long long result[2];
+
 long long* step(int g, long long m, long long n)
 {
 	int isPrime = 0;
 	int Count, reminderCount;
-	int matrix[100000], result[2], matrixCount = 0;
 	// 동적 배열은 C++ 사용할 때 시도하고, 현재(C)는 코드 구조를 쉽게 읽기 위해 정적 배열로 선언.
+	int matrix[100000], matrixCount = 0;
 	int betweenCount;
 
 	// m > n 으로 입력했을 때의 예외처리.
 	// ex) (2, 5101, 103) --> 0, 0
 	if (m > n)
 	{
-		int* result[2] = { 0, 0 };
-		printf("%d %d\n", result[0], result[1]);
+		result[0] = 0;
+		result[1] = 0;
+		printf("%lld %lld\n", result[0], result[1]);
 		return result;
 	}
 	// step함수는 start of the search(m) ~ end of the search(n)가 있다.
@@ -45,36 +51,24 @@ long long* step(int g, long long m, long long n)
 			// ex) (2, 100, 110) --> 101, 103
 			if (matrixCount >= 2 && g == (matrix[matrixCount - 1] - matrix[matrixCount - 2]))
 			{
-				int* result[2] = { matrix[matrixCount - 2], matrix[matrixCount - 1] };
-				printf("%d, %d\n", matrix[matrixCount - 2], matrix[matrixCount - 1]);
+				result[0] = matrix[matrixCount - 2];
+				result[1] = matrix[matrixCount - 1];
+				printf("%lld, %lld\n", result[0], result[1]);
 				return result;
 				matrixCount = 0;
 			}
 			// Case 2. 맞닿은 두 소수 차이만 구하는 것이 아니라 prime step(g)를 고려한 또다른 수식을 각각 작성하여야 한다.
 			// else if로 재차 구분시켜놓는 이유는, 비효율적으로 for문을 진입하지 않게 하기 위함이다.
-			// ex1) (6, 100, 110) --> 101, 107
-			// ex2) (3, 2, 5) --> 2, 5 ★codewars(gcc)에서는 이 부분에서 (3, 2, 5) --> 0, 3으로 출력한다. 2,3,107,30047,30059,30071, ...
+			// ex) (6, 100, 110) --> 101, 107
 			else if (matrixCount >= 2 && g != (matrix[matrixCount - 1] - matrix[matrixCount - 2]))
 			{
 				for (betweenCount = 3; betweenCount <= g; betweenCount++)
 				{
-					// 원인은 gcc 문법과 VS 문법의 차이점에서 비롯하는 것.
-					/*
-					// gcc용 디버그 코드.
-					// prime step(g)가 start of the search(m) 보다 큰 경우 마지막 소수를 제대로 구하지 못하는 것을 보완해야 한다. (미완성)
-					if ((g > m) && matrixCount >= 2)
-					{
-						int* result[2] = { matrix[matrixCount - betweenCount], matrix[matrixCount - 1] };
-						printf("%d, %d\n", matrix[matrixCount - betweenCount], matrix[matrixCount - 1]);
-						return result;
-						matrixCount = 0;
-					}
-					*/
-					// VS용 코드.
 					if (matrixCount >= 2 && g == (matrix[matrixCount - 1] - matrix[matrixCount - betweenCount]))
 					{
-						int* result[2] = { matrix[matrixCount - betweenCount], matrix[matrixCount - 1] };
-						printf("%d, %d\n", matrix[matrixCount - betweenCount], matrix[matrixCount - 1]);
+						result[0] = matrix[matrixCount - betweenCount];
+						result[1] = matrix[matrixCount - 1];
+						printf("%lld, %lld\n", result[0], result[1]);
 						return result;
 						matrixCount = 0;
 					}
@@ -83,8 +77,9 @@ long long* step(int g, long long m, long long n)
 				// ex) (2, 4900, 4919) --> 0, 0
 				if (n == Count)
 				{
-					int* result[2] = { 0, 0 };
-					printf("%d %d\n", result[0], result[1]);
+					result[0] = 0;
+					result[1] = 0;
+					printf("%lld %lld\n", result[0], result[1]);
 					return result;
 					matrixCount = 0;
 				}
@@ -93,8 +88,9 @@ long long* step(int g, long long m, long long n)
 			// ex) (2, 5, 5) --> 0, 0
 			else if (n == Count)
 			{
-				int* result[2] = { 0, 0 };
-				printf("%d %d\n", result[0], result[1]);
+				result[0] = 0;
+				result[1] = 0;
+				printf("%lld %lld\n", result[0], result[1]);
 				return result;
 				matrixCount = 0;
 			}
@@ -105,8 +101,9 @@ long long* step(int g, long long m, long long n)
 			// ex) (11, 30000, 100000) --> 0, 0
 			if (n == Count)
 			{
-				int* result[2] = { 0, 0 };
-				printf("%d %d\n", result[0], result[1]);
+				result[0] = 0;
+				result[1] = 0;
+				printf("%lld %lld\n", result[0], result[1]);
 				return result;
 				matrixCount = 0;
 			}
