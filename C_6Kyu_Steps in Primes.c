@@ -27,6 +27,8 @@ long long* step(int g, long long m, long long n)
 	// step함수는 start of the search(m) ~ end of the search(n)가 있다.
 	for (Count = m; Count <= n; Count++)
 	{
+		// isPrime = 0으로 초기화.
+		isPrime = 0;
 		// 나누어줄 변수를 1씩 증가시키면서 반복.
 		for (reminderCount = 1; reminderCount <= Count; reminderCount++)
 		{
@@ -34,11 +36,16 @@ long long* step(int g, long long m, long long n)
 			// (즉, isPrime == 2일 경우, 그건 소수이다.)
 			// 허나 아래 조건식 하나만으로는 나머지가 0이되는 모든 경우가 계산된다.
 			if (Count % reminderCount == 0)
+			{
 				isPrime = isPrime + 1;
+				if (isPrime > 2)
+					break;
+			}
 
-			// 연산속도 향상을 위한 예외처리.
-			if (isPrime > 2)
-				break;
+			/* 개선 아이디어: 자기 자신과 1만으로 나누어지므로 나머지가 0이 두 번만 나오는 수가 소수이다.
+			하지만 % 연산을 1번만 거치게 하기 위해 reminderCount = 2; 부터 시작한다. (최적화)
+			(즉, isPrime == 1일 경우, 그건 소수이다.) */
+
 		}
 
 		// 모든 경우가 계산되는 것의 해결 방법으로써
@@ -55,7 +62,6 @@ long long* step(int g, long long m, long long n)
 				result[1] = matrix[matrixCount - 1];
 				printf("%lld, %lld\n", result[0], result[1]);
 				return result;
-				matrixCount = 0;
 			}
 			// Case 2. 맞닿은 두 소수 차이만 구하는 것이 아니라 prime step(g)를 고려한 또다른 수식을 각각 작성하여야 한다.
 			// else if로 재차 구분시켜놓는 이유는, 비효율적으로 for문을 진입하지 않게 하기 위함이다.
@@ -70,7 +76,6 @@ long long* step(int g, long long m, long long n)
 						result[1] = matrix[matrixCount - 1];
 						printf("%lld, %lld\n", result[0], result[1]);
 						return result;
-						matrixCount = 0;
 					}
 				}
 				// Case 3. start of the search(m) ~ end of the search(n) 내 소수가 2개 이상이지만 prime step(g)에 걸리지 않을 때.
@@ -81,7 +86,6 @@ long long* step(int g, long long m, long long n)
 					result[1] = 0;
 					printf("%lld %lld\n", result[0], result[1]);
 					return result;
-					matrixCount = 0;
 				}
 			}
 			// Case 4. start of the search(m), end of the search(n) 가 일치하는 수 일 때.
@@ -92,7 +96,6 @@ long long* step(int g, long long m, long long n)
 				result[1] = 0;
 				printf("%lld %lld\n", result[0], result[1]);
 				return result;
-				matrixCount = 0;
 			}
 		}
 		else
@@ -105,11 +108,8 @@ long long* step(int g, long long m, long long n)
 				result[1] = 0;
 				printf("%lld %lld\n", result[0], result[1]);
 				return result;
-				matrixCount = 0;
 			}
 		}
-		// isPrime = 0으로 다시 초기화.
-		isPrime = 0;
 	}
 	return 0;
 }
