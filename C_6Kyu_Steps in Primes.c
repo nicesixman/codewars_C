@@ -34,7 +34,6 @@ long long* step(int g, long long m, long long n)
 		{
 			// 자기 자신과 1만으로 나누어지므로 for문을 도는동안 0이 두 번만 나오면 그건 소수이다.
 			// (즉, isPrime == 2일 경우, 그건 소수이다.)
-			// 허나 아래 조건식 하나만으로는 나머지가 0이되는 모든 경우가 계산된다.
 			if (Count % reminderCount == 0)
 			{
 				isPrime = isPrime + 1;
@@ -45,7 +44,6 @@ long long* step(int g, long long m, long long n)
 			/* 개선 아이디어: 자기 자신과 1만으로 나누어지므로 나머지가 0이 두 번만 나오는 수가 소수이다.
 			하지만 % 연산을 1번만 거치게 하기 위해 reminderCount = 2; 부터 시작한다. (최적화)
 			(즉, isPrime == 1일 경우, 그건 소수이다.) */
-
 		}
 
 		// 모든 경우가 계산되는 것의 해결 방법으로써
