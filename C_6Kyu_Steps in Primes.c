@@ -3,10 +3,10 @@
 #include <windows.h>
 #pragma warning(disable:4996)
 
-long long result[2];
 // 전역변수를 사용하는 이유는 배열값을 return받기 위함.
 // int로 선언할 시 prime step(g)가 start of the search(m) 보다 큰 경우 마지막 소수를 제대로 구하지 못한다.
 // 아마 컴파일러 내 형변환 과정에서 VS는 잘 변환시켜주는 반면, gcc는 버그가 발생하는 듯 함. (추측)
+long long result[2];
 
 long long* step(int g, long long m, long long n)
 {
