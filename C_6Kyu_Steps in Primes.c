@@ -14,6 +14,15 @@ long long* step(int g, long long m, long long n)
 	int Count, reminderCount;
 	int betweenCount;
 	// 정적 배열로 선언하면 제출 시 free(): invalid pointer 에러 발생. 동적 배열로 선언하자.
+	/*
+	codewars 사이트에서 제출 시도 시... 동적 배열의 크기를
+	10으로 주면 : 조건문 안의 식이 올바르게 계산되지 않음.
+	100으로 주면 : Execution time out / Error in `. / test': free(): invalid next size (fast)
+	1000으로 주면 : malloc.c : 2394 : sysmalloc : Assertion
+	10000으로 주면 : 조건문 안의 식이 올바르게 계산되지 않음.
+	100000으로 주면 : Signal code : 11(segmentation fault)
+	참 특이하다.
+	*/
 	long long* matrix = (long long*)malloc(sizeof(long long) * 100);
 	int matrixCount = 0;
 
