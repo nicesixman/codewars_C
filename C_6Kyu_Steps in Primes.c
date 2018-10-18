@@ -1,19 +1,21 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <windows.h>
 #pragma warning(disable:4996)
 
+long long result[2];
 // 전역변수를 사용하는 이유는 배열값을 return받기 위함.
 // int로 선언할 시 prime step(g)가 start of the search(m) 보다 큰 경우 마지막 소수를 제대로 구하지 못한다.
 // 아마 컴파일러 내 형변환 과정에서 VS는 잘 변환시켜주는 반면, gcc는 버그가 발생하는 듯 함. (추측)
-long long result[2];
 
 long long* step(int g, long long m, long long n)
 {
 	int isPrime = 0;
 	int Count, reminderCount;
-	// 동적 배열은 C++ 사용할 때 시도하고, 현재(C)는 코드 구조를 쉽게 읽기 위해 정적 배열로 선언.
-	int matrix[100000], matrixCount = 0;
 	int betweenCount;
+	// 정적 배열로 선언하면 제출 시 free(): invalid pointer 에러 발생. 동적 배열로 선언하자.
+	long long* matrix = (long long*)malloc(sizeof(long long) * 100);
+	int matrixCount = 0;
 
 	// m > n 으로 입력했을 때의 예외처리.
 	// ex) (2, 5101, 103) --> 0, 0
@@ -27,28 +29,20 @@ long long* step(int g, long long m, long long n)
 	// step함수는 start of the search(m) ~ end of the search(n)가 있다.
 	for (Count = m; Count <= n; Count++)
 	{
-		// isPrime = 0으로 초기화.
 		isPrime = 0;
 		// 나누어줄 변수를 1씩 증가시키면서 반복.
-		for (reminderCount = 1; reminderCount <= Count; reminderCount++)
+		for (reminderCount = 1; reminderCount < Count; reminderCount++)
 		{
-			// 자기 자신과 1만으로 나누어지므로 for문을 도는동안 0이 두 번만 나오면 그건 소수이다.
-			// (즉, isPrime == 2일 경우, 그건 소수이다.)
 			if (Count % reminderCount == 0)
 			{
-				isPrime = isPrime + 1;
-				if (isPrime > 2)
+				isPrime++;
+				if (isPrime > 1)
 					break;
 			}
-
-			/* 개선 아이디어: 자기 자신과 1만으로 나누어지므로 나머지가 0이 두 번만 나오는 수가 소수이다.
-			하지만 % 연산을 1번만 거치게 하기 위해 reminderCount = 2; 부터 시작한다. (최적화)
-			(즉, isPrime == 1일 경우, 그건 소수이다.) */
 		}
 
-		// 모든 경우가 계산되는 것의 해결 방법으로써
-		// 안쪽 for문이 마무리 된 후 isPrime == 2일 때만 배열에 수를 저장하게끔 코드를 짜면 된다.
-		if (isPrime == 2)
+		// 안쪽 for문이 마무리 된 후 isPrime == 1일 때만 배열에 수를 저장하게끔 코드를 짜면 된다.
+		if (isPrime == 1)
 		{
 			matrix[matrixCount] = Count;
 			matrixCount = matrixCount + 1;
@@ -109,6 +103,7 @@ long long* step(int g, long long m, long long n)
 			}
 		}
 	}
+	free(matrix);
 	return 0;
 }
 
