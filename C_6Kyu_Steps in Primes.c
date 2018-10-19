@@ -3,28 +3,17 @@
 #include <windows.h>
 #pragma warning(disable:4996)
 
-// 전역변수를 사용하는 이유는 배열값을 return받기 위함.
-// int로 선언할 시 prime step(g)가 start of the search(m) 보다 큰 경우 마지막 소수를 제대로 구하지 못한다.
-// 아마 컴파일러 내 형변환 과정에서 VS는 잘 변환시켜주는 반면, gcc는 버그가 발생하는 듯 함. (추측)
-long long result[2];
-
 long long* step(int g, long long m, long long n)
 {
 	int isPrime = 0;
+	// int Count의 경우 원래는 long long으로 선언해야 warning C4244가 발생하지 않지만
+	// long long으로 선언할 경우에는 실행속도가 2.5배 가까이 느려져버림.
 	int Count, reminderCount;
 	int betweenCount;
-	// 정적 배열로 선언하면 제출 시 free(): invalid pointer 에러 발생. 동적 배열로 선언하자.
-	/*
-	codewars 사이트에서 제출 시도 시... 동적 배열의 크기를
-	10으로 주면 : 조건문 안의 식이 올바르게 계산되지 않음.
-	100으로 주면 : Execution time out / Error in `. / test': free(): invalid next size (fast)
-	1000으로 주면 : malloc.c : 2394 : sysmalloc : Assertion
-	10000으로 주면 : 조건문 안의 식이 올바르게 계산되지 않음.
-	100000으로 주면 : Signal code : 11(segmentation fault)
-	참 특이하다.
-	*/
-	long long* matrix = (long long*)malloc(sizeof(long long) * 100);
+	// 동적 배열로 선언.
+	long long* matrix = (long long*)malloc(sizeof(long long) * 100000);
 	int matrixCount = 0;
+	long long* result = (long long*)malloc(sizeof(long long) * 2);
 
 	// m > n 으로 입력했을 때의 예외처리.
 	// ex) (2, 5101, 103) --> 0, 0
@@ -33,6 +22,7 @@ long long* step(int g, long long m, long long n)
 		result[0] = 0;
 		result[1] = 0;
 		printf("%lld %lld\n", result[0], result[1]);
+		free(matrix);
 		return result;
 	}
 	// step함수는 start of the search(m) ~ end of the search(n)가 있다.
@@ -62,6 +52,7 @@ long long* step(int g, long long m, long long n)
 				result[0] = matrix[matrixCount - 2];
 				result[1] = matrix[matrixCount - 1];
 				printf("%lld, %lld\n", result[0], result[1]);
+				free(matrix);
 				return result;
 			}
 			// Case 2. 맞닿은 두 소수 차이만 구하는 것이 아니라 prime step(g)를 고려한 또다른 수식을 각각 작성하여야 한다.
@@ -71,11 +62,15 @@ long long* step(int g, long long m, long long n)
 			{
 				for (betweenCount = 3; betweenCount <= g; betweenCount++)
 				{
-					if (matrixCount >= 2 && g == (matrix[matrixCount - 1] - matrix[matrixCount - betweenCount]))
+					// matrixCount가 올라가기도 전에 betweenCount가 더 높은 경우의 예외처리.
+					if (matrixCount < betweenCount)
+						break;
+					else if (g == (matrix[matrixCount - 1] - matrix[matrixCount - betweenCount]))
 					{
 						result[0] = matrix[matrixCount - betweenCount];
 						result[1] = matrix[matrixCount - 1];
 						printf("%lld, %lld\n", result[0], result[1]);
+						free(matrix);
 						return result;
 					}
 				}
@@ -86,6 +81,7 @@ long long* step(int g, long long m, long long n)
 					result[0] = 0;
 					result[1] = 0;
 					printf("%lld %lld\n", result[0], result[1]);
+					free(matrix);
 					return result;
 				}
 			}
@@ -96,6 +92,7 @@ long long* step(int g, long long m, long long n)
 				result[0] = 0;
 				result[1] = 0;
 				printf("%lld %lld\n", result[0], result[1]);
+				free(matrix);
 				return result;
 			}
 		}
@@ -108,10 +105,12 @@ long long* step(int g, long long m, long long n)
 				result[0] = 0;
 				result[1] = 0;
 				printf("%lld %lld\n", result[0], result[1]);
+				free(matrix);
 				return result;
 			}
 		}
 	}
+	free(result);
 	free(matrix);
 	return 0;
 }
