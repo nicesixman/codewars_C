@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #pragma warning(disable:4996)
-#define MAXvalue 10000
+#define MAXvalue 1000000
 
 // ★ 에라토스테네스의 체를 활용하여 연산을 대폭 줄여본다.
 /*
@@ -14,7 +14,9 @@ step5) 6는 2의 배수이므로 바로 skip
 즉, ESFlag == 0(소수가 아니면) 일 때는 2중 중첩 for문을 계산하며
 ESFlag == 1(소수라면) 2중 중첩 for문으로 진입하지 않게 함으로써 Dynamic Programming 구현.
 */
-static int ESArr[MAXvalue + 1] = { 0 };
+
+// 어차피 0 아니면 1만 저장되므로 char로 선언하여 할당 가능 공간 추가 확보
+static char ESArr[MAXvalue + 1] = { 0 };
 
 // inline 함수를 통해 함수 호출을 줄임으로써 속도 낭비를 방지.
 static int __inline isEratosthenesSieve(unsigned int Count)
@@ -22,7 +24,7 @@ static int __inline isEratosthenesSieve(unsigned int Count)
 	int i, j;
 	static int ESArrFlag = 0;
 
-	if (ESArrFlag = 0)
+	if (ESArrFlag == 0)
 	{
 		// i를 2부터 MAXvalue까지 설정 후 모든 숫자를 연산.
 		for (i=2; i<MAXvalue; i++)
@@ -47,14 +49,14 @@ static int __inline isEratosthenesSieve(unsigned int Count)
 
 long long* step(int g, long long m, long long n)
 {
-	int isPrime = 0;
-	// int Count의 경우 원래는 long long으로 선언해야 warning C4244가 발생하지 않지만
-	// long long으로 선언할 경우에는 실행속도가 2.5배 가까이 느려져버림.
-	int Count, reminderCount;
-	int betweenCount;
+	int isNotPrime = 0;
+	// int Count의 경우 원래는 long long으로 선언해야 warning C4244가 발생하지 않지만 실행속도가 2.5배 가까이 느려져버림.
+	int Count = 0;
+	int ESCount = 0, betweenCount;
 	// 동적 배열은 느려서 알고리즘 문제풀이에 적합하지 않다. 정적 배열로 선언.
 	int matrix[MAXvalue], matrixCount = 0;
 	long long* result = (long long*)malloc(sizeof(long long) * 1);
+	int i;
 
 	// 문제에서 주어진 조건의 사전 예외처리.
 	// ex) (2, 5, 5) --> 0, 0
@@ -68,83 +70,68 @@ long long* step(int g, long long m, long long n)
 
 	// step함수는 start of the search(m) ~ end of the search(n)가 있다.
 	// 단, m~n사이의 소수만 검색하면 되므로 m이 범위 안에 있더라도 n이 범위를 넘어서면 구하지 않아도 된다.
-	// 따라서 end of the search(n)까지 모두 찾는 것이 아니라, n-g까지만 검색하면 된다.
-	for (Count = m; Count <= n - g; Count++)
+	// 따라서 원래는 end of the search(n)까지 모두 찾는 것이 아니라, n-g까지만 검색해도 된다.
+	for (Count=m; Count<=n; Count++)
 	{
-		isPrime = 0;
-		// Count가 소수가 아니면 skip.
+		isNotPrime = 0;
+		// Count가 소수가 아니라면 추가 연산 없이 for문으로 되돌아간다.
 		if (isEratosthenesSieve(Count) == 0)
 			continue;
-		else if (isEratosthenesSieve(Count) == 1)
+		// Count가 소수라면 아래 조건문으로 진입시켜준다.
+		if (isEratosthenesSieve(Count) == 1)
 		{
-			// 나누어줄 변수를 1씩 증가시키면서 반복.
-			for (reminderCount = 1; reminderCount < Count; reminderCount++)
-			{
-				if (Count % reminderCount == 0)
-				{
-					isPrime++;
-					if (isPrime > 1)
-						break;
-				}
-			}
-		}
-
-		// 2중 for문이 마무리 된 후 isPrime == 1일 때만 배열에 수를 저장하게끔 코드를 짜면 된다.
-		if (isPrime == 1)
-		{
+			isNotPrime++;
 			matrix[matrixCount] = Count;
-			matrixCount = matrixCount + 1;
-			// Case 1. 맞닿은 두 소수 차이를 계산.
-			// ex) (2, 100, 110) --> 101, 103
-			if (matrixCount >= 2 && g == (matrix[matrixCount - 1] - matrix[matrixCount - 2]))
+		}
+		// isNotPrime == 1일 때(소수일 때) matrix 배열 위치를 +1씩 변경해서 저장해준다.
+		if (isNotPrime == 1)
+		{
+			matrixCount++;
+			continue;
+		}
+	}
+	// matrixCount가 2 이상으로 올라간다면 소수가 아닌 수가 2개 이상 존재한다는 의미.
+
+	// Case 1. 맞닿은 두 소수 차이를 계산.
+	// ex) (2, 100, 110) --> 101, 103
+	// matrix[matrixCount]: start of the search(m)보다 큰 수 중 처음 소수가 아닌 수가 저장되어 있음.
+	for (i=0; i<matrixCount; i++)
+	{
+		if (matrixCount >= 2 && g == (matrix[i+1] - matrix[i]))
+		{
+			result[0] = matrix[i];
+			result[1] = matrix[i+1];
+			printf("%lld, %lld\n", result[0], result[1]);
+			return result;
+			break;
+		}
+		// Case 2. 맞닿은 두 소수 차이만 구하는 것이 아니라 prime step(g)를 고려한 또다른 수식을 각각 작성하여야 한다.
+		// else if로 재차 구분시켜놓는 이유는, 비효율적으로 for문을 진입하지 않게 하기 위함이다.
+		// ex) (6, 100, 110) --> 101, 107
+		else if (matrixCount >= 2 && g != (matrix[i+1] - matrix[i]))
+		{
+			for (betweenCount=2; betweenCount<g; betweenCount++)
 			{
-				result[0] = matrix[matrixCount - 2];
-				result[1] = matrix[matrixCount - 1];
-				printf("%lld, %lld\n", result[0], result[1]);
-				return result;
-			}
-			// Case 2. 맞닿은 두 소수 차이만 구하는 것이 아니라 prime step(g)를 고려한 또다른 수식을 각각 작성하여야 한다.
-			// else if로 재차 구분시켜놓는 이유는, 비효율적으로 for문을 진입하지 않게 하기 위함이다.
-			// ex) (6, 100, 110) --> 101, 107
-			else if (matrixCount >= 2 && g != (matrix[matrixCount - 1] - matrix[matrixCount - 2]))
-			{
-				for (betweenCount = 3; betweenCount <= g; betweenCount++)
+				if (g == (matrix[i+betweenCount] - matrix[i]))
 				{
-					// matrixCount가 올라가기도 전에 betweenCount가 더 높은 경우의 예외처리.
-					if (matrixCount < betweenCount)
-						break;
-					else if (g == (matrix[matrixCount - 1] - matrix[matrixCount - betweenCount]))
-					{
-						result[0] = matrix[matrixCount - betweenCount];
-						result[1] = matrix[matrixCount - 1];
-						printf("%lld, %lld\n", result[0], result[1]);
-						return result;
-					}
-				}
-				// Case 3. start of the search(m) ~ end of the search(n) 내 소수가 2개 이상이지만 prime step(g)에 걸리지 않을 때.
-				// ex) (2, 4900, 4919) --> 0, 0
-				if (n-g == Count)
-				{
-					result[0] = 0;
-					result[1] = 0;
-					printf("%lld %lld\n", result[0], result[1]);
+					result[0] = matrix[i];
+					result[1] = matrix[i + betweenCount];
+					printf("%lld, %lld\n", result[0], result[1]);
 					return result;
 				}
 			}
 		}
-		else
-		{
-			// Case 5. start of the search(m) ~ end of the search(n) 내 모든 소수의 차 중 prime step(g)과 일치하는 수가 없을 때.
-			// ex) (11, 30000, 100000) --> 0, 0
-			if (n-g == Count)
-			{
-				result[0] = 0;
-				result[1] = 0;
-				printf("%lld %lld\n", result[0], result[1]);
-				return result;
-			}
-		}
 	}
+	// Case 3. prime step(g)를 고려해도 matrix 배열 안에 해당되는 소수가 없을 때.
+	// ex) (2, 4900, 4919)--> 0, 0
+	if (matrixCount >= 2)
+	{
+		result[0] = 0;
+		result[1] = 0;
+		printf("%lld %lld\n", result[0], result[1]);
+		return result;
+	}
+	free(result);
 	return 0;
 }
 
