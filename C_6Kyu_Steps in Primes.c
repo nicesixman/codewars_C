@@ -15,7 +15,7 @@ step5) 6는 2의 배수이므로 바로 skip
 */
 
 // 어차피 ESArr은 0 아니면 1만 저장되므로 char로 선언하여 할당 가능 공간 추가 확보.
-static char ESArr[MAXvalue + 1] = { 0 };
+static int ESArr[MAXvalue + 1] = { 0 };
 
 // inline 함수를 통해 함수 호출을 줄임으로써 실행속도 낭비를 방지.
 static int __inline isEratosthenesSieve(unsigned int Count)
@@ -54,8 +54,8 @@ long long* step(int g, long long m, long long n)
 	// 원래 동적 배열(malloc)은 느려서 알고리즘 문제풀이에 적합하지 않다. 가능하면 정적 배열로 선언. ex) int matrix[12000000];
 	// 허나 1MB 보다 크기가 큰 배열을 만들기 위해서는 속성 페이지에서 스택 예약 크기를 늘리던가, 전역 변수로 선언해야 한다.
 	int* matrix = (int*)malloc(sizeof(int) * 12000000);
-	long long* result = (long long*)malloc(sizeof(long long) * 1);
-	printf("선언직후 %lld\n", result);
+	// result[0], result[1] 2개를 반환해야해서 *2로 지정.
+	long long* result = (long long*)malloc(sizeof(long long) * 2);
 	int i;
 
 	// 문제에서 주어진 조건의 사전 예외처리.
@@ -66,7 +66,6 @@ long long* step(int g, long long m, long long n)
 		result[1] = 0;
 		printf("%lld %lld\n", result[0], result[1]);
 		free(matrix);
-		printf("리턴직전: %lld\n", result);
 		return result;
 	}
 
@@ -97,7 +96,6 @@ long long* step(int g, long long m, long long n)
 			result[1] = matrix[i+1];
 			printf("%lld, %lld\n", result[0], result[1]);
 			free(matrix);
-			printf("리턴직전: %lld\n", result);
 			return result;
 			break;
 		}
@@ -113,7 +111,6 @@ long long* step(int g, long long m, long long n)
 					result[1] = matrix[i + betweenCount];
 					printf("%lld, %lld\n", result[0], result[1]);
 					free(matrix);
-					printf("리턴직전: %lld\n", result);
 					return result;
 				}
 			}
@@ -127,7 +124,6 @@ long long* step(int g, long long m, long long n)
 		result[1] = 0;
 		printf("%lld %lld\n", result[0], result[1]);
 		free(matrix);
-		printf("리턴직전: %lld\n", result);
 		return result;
 	}
 	free(matrix);
@@ -150,7 +146,6 @@ int main()
 	scanf("%lld", &n);
 	printf("-----------------------------------------------------\n");
 	stepFree = step(g, m, n);		// 함수 실행 후 반환 값을 저장.
-	printf("프리직전: %lld", stepFree);
 	free(stepFree);
 	system("pause");
 	return 0;
