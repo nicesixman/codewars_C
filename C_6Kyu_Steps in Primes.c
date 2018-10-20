@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #pragma warning(disable:4996)
-#define MAXvalue 10000
+#define MAXvalue 12000000
 
 // ★ 에라토스테네스의 체를 활용하여 연산을 대폭 줄여본다.
 /*
@@ -48,12 +48,14 @@ static int __inline isEratosthenesSieve(unsigned int Count)
 
 long long* step(int g, long long m, long long n)
 {
-	int isNotPrime = 0;
 	// int Count의 경우 원래는 long long으로 선언해야 warning C4244가 발생하지 않지만 실행속도가 2.5배 가까이 느려져버림.
 	int Count = 0, betweenCount;
-	// 동적 배열은 느려서 알고리즘 문제풀이에 적합하지 않다. 가능하면 정적 배열로 선언.
-	int matrix[1024], matrixCount = 0;
+	int matrixCount = 0;
+	// 원래 동적 배열(malloc)은 느려서 알고리즘 문제풀이에 적합하지 않다. 가능하면 정적 배열로 선언. ex) int matrix[12000000];
+	// 허나 1MB 보다 크기가 큰 배열을 만들기 위해서는 속성 페이지에서 스택 예약 크기를 늘리던가, 전역 변수로 선언해야 한다.
+	int* matrix = (int*)malloc(sizeof(int) * 12000000);
 	long long* result = (long long*)malloc(sizeof(long long) * 1);
+	printf("선언직후 %lld\n", result);
 	int i;
 
 	// 문제에서 주어진 조건의 사전 예외처리.
@@ -63,32 +65,27 @@ long long* step(int g, long long m, long long n)
 		result[0] = 0;
 		result[1] = 0;
 		printf("%lld %lld\n", result[0], result[1]);
+		free(matrix);
+		printf("리턴직전: %lld\n", result);
 		return result;
 	}
 
 	/* step함수는 start of the search(m) ~ end of the search(n)가 있다.
 	단, m~n사이의 소수만 검색하면 되므로 m이 범위 안에 있더라도 n이 범위를 넘어서면 구하지 않아도 된다.
 	따라서 사실은 end of the search(n)까지 모두 찾는 것이 아니라, n-g까지만 검색해도 된다. */
-	for (Count=m; Count<=n; Count++)
+	for (Count = m; Count <= n; Count++)
 	{
-		isNotPrime = 0;
 		// Count가 소수가 아니라면 추가 연산 없이 for문으로 되돌아간다.
 		if (isEratosthenesSieve(Count) == 0)
 			continue;
-		// Count가 소수라면 아래 조건문으로 진입시켜준다.
+		// Count가 소수라면 소수인 숫자를 matrix 배열 위치를 +1씩 변경하며 저장해준다.
 		if (isEratosthenesSieve(Count) == 1)
 		{
-			isNotPrime++;
 			matrix[matrixCount] = Count;
-		}
-		// 소수인 숫자는 matrix 배열 위치를 +1씩 변경하며 저장해준다.
-		if (isNotPrime == 1)
-		{
 			matrixCount++;
 			continue;
 		}
 	}
-	// matrixCount가 2 이상으로 올라간다면 소수가 아닌 수가 2개 이상 존재한다는 의미.
 
 	// Case 1. 맞닿은 두 소수 차이를 계산.
 	// ex) (2, 100, 110) --> 101, 103
@@ -99,6 +96,8 @@ long long* step(int g, long long m, long long n)
 			result[0] = matrix[i];
 			result[1] = matrix[i+1];
 			printf("%lld, %lld\n", result[0], result[1]);
+			free(matrix);
+			printf("리턴직전: %lld\n", result);
 			return result;
 			break;
 		}
@@ -113,6 +112,8 @@ long long* step(int g, long long m, long long n)
 					result[0] = matrix[i];
 					result[1] = matrix[i + betweenCount];
 					printf("%lld, %lld\n", result[0], result[1]);
+					free(matrix);
+					printf("리턴직전: %lld\n", result);
 					return result;
 				}
 			}
@@ -125,9 +126,11 @@ long long* step(int g, long long m, long long n)
 		result[0] = 0;
 		result[1] = 0;
 		printf("%lld %lld\n", result[0], result[1]);
+		free(matrix);
+		printf("리턴직전: %lld\n", result);
 		return result;
 	}
-	free(result);
+	free(matrix);
 	return 0;
 }
 
@@ -135,6 +138,7 @@ int main()
 {
 	int g;
 	long long m, n;
+	long long* stepFree;
 
 	printf("2-steps primes를 구합니다.\n");
 	printf("-----------------------------------------------------\n");
@@ -145,8 +149,9 @@ int main()
 	printf("범위의 마지막 수(시작 수 이상)를 기입하세요.\n");
 	scanf("%lld", &n);
 	printf("-----------------------------------------------------\n");
-	step(g, m, n);		// 함수 실행
+	stepFree = step(g, m, n);		// 함수 실행 후 반환 값을 저장.
+	printf("프리직전: %lld", stepFree);
+	free(stepFree);
 	system("pause");
-
 	return 0;
 }
