@@ -1,22 +1,26 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <Windows.h>
 #pragma warning(disable:4996)
 
 int longest_palindrome(const char *s)
 {
-	// 동적배열로 받아와서 쓸데없이 null을 reverse하지 않게끔 한다.
-	char *copied = malloc(sizeof(char)*1000);
-	char *reversed;
+	// 포인터 매개변수는 함수 내부/외부에서 모두 사용 가능.
+	const char *copied = s;
 
 	printf("-----------------------------------\n");
 	printf("Called longest_palindrome function.\n");
-	strcpy(copied, s);
-	printf("Original string: %s\n", copied);
-	reversed = strrev(copied);
-	printf("Reversed string: %s\n", reversed);
+	printf("Original string: ");
+	for (int slen=0; slen<(int)strlen(s); slen++)
+	{
+		putchar(*copied++);
+	}
+	printf("\nReversed string: ");
+	for (int slen=strlen(s); slen>0; slen--)
+	{
+		putchar(*--copied);
+	}
+	printf("\n");
 
-	free(copied);
 	return 0;
 }
 
