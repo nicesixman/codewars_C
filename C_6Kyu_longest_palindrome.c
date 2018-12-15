@@ -9,7 +9,7 @@ int longest_palindrome(const char *s)
 	char devided[1000][1000] = { '\0' };
 	int devided_queueX = 0, devided_queueY = 0;
 	int find_queueX = 0, find_queueY = 0;
-	int for_queueX = 0, for_queueY = 0;
+	int for_queueX = 0, for_queueY = 1;
 	int answer_queue = 0, answer = 0;
 
 	printf("-----------------------------------\n");
@@ -37,6 +37,11 @@ int longest_palindrome(const char *s)
 		if (devided[find_queueX][find_queueY] != '\0')
 		{
 			find_queueY++;
+			// 이 부분부터 어찌어찌 잘 건드리면 전 문자열 비교 가능할 듯?
+			for (int i=0; i<find_queueY; i++)
+			{
+				printf(" Hello Counting%d★\n", i);
+			}
 			answer_queue++;
 			if (devided[find_queueX][find_queueY] == ' ')
 			{
@@ -45,13 +50,13 @@ int longest_palindrome(const char *s)
 				answer_queue = 0;
 				find_queueX++;
 				find_queueY = 0;
-				printf("(%d) ", answer);
+				// printf("(%d) ", answer);
 			}
 			else if (devided[find_queueX][find_queueY] == '\0')
 			{
 				if (answer_queue > answer)
 					answer = answer_queue;
-				printf("(%d) ", answer);
+				// printf("(%d) ", answer);
 				break;
 			}
 		}
