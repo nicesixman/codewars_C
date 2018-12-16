@@ -10,11 +10,12 @@ int longest_palindrome(const char *s)
 	int devided_queueX = 0, devided_queueY = 0;
 	int find_queueX = 0, find_queueY = 0;
 	int for_queueY = 1;
-	int answer_queue = 0, answer_Y = 0, answer = 0, answer_highest = 0;
+	int answer_queue = 0, answer_Y = 0, answer = 0;
+	int answer_highest = 0, exception_highest = 0;
 
 	printf("-----------------------------------\n");
 	// C언어는 string을 지원 안하므로 2차원 배열을 이용하여 char별로 저장.
-	// 공백 개수를 포함한 char 개수만큼 for문 반복. 단어의 끝에 공백도 붙는다.
+	// 공백 개수를 포함한 char 개수만큼 for문 반복.
 	for (int slen=0; slen<(int)strlen(s); slen++)
 	{
 		devided[devided_queueX][devided_queueY] = *copied++;
@@ -58,12 +59,32 @@ int longest_palindrome(const char *s)
 							answer = answer_Y + 1;
 							if (answer > answer_highest)
 								answer_highest = answer;
-							printf("--> palindrome Found!! answer_highest's value: %d\n", answer_highest);
+							printf(" --> palindrome Found!! answer_highest's value: %d\n", answer_highest);
 						}
 					}
-					// ★ 특정 char이 반복되어 나올 때 계산을 제대로 해주지 못하고 있음. 예외처리 필요.
 					answer_Y = 0;
 				}
+			}
+			// 특정 char이 반복되어 나올 때의 예외처리.
+			// 1) 시작점부터 char이 반복될 때. (aaaaab)
+			if (devided[find_queueX][slen] == devided[find_queueX][slen + 1])
+			{
+				exception_highest = find_queueY + 1;
+				printf(" --> EX1)exception Found!! answer_highest's value: %d\n", exception_highest);
+			}
+			/*
+			// 2) n번째 부터 char이 반복될 때. (baaaaa)
+			if (devided[find_queueX][slen] == devided[find_queueX][slen - 1])
+			{
+				exception_highest = find_queueY - 1;
+				printf(" --> EX2)exception Found!! answer_highest's value: %d\n", exception_highest);
+			}
+			*/
+			// 딱 1글자만 입력됐을 때 단순하게 1을 return하는 예외처리.
+			if (strlen(s) == 1)
+			{
+				answer_highest = 1;
+				printf(" --> exception Found!! answer_highest's value: %d\n", answer_highest);
 			}
 			if (devided[find_queueX][find_queueY] == ' ')
 			{
@@ -81,7 +102,7 @@ int longest_palindrome(const char *s)
 
 int main()
 {
-	char *s = "baaaaab";
+	char *s = "aaaaab";
 	printf("The test string is: I like racecars that go fast\n");
 	longest_palindrome(s);
 
