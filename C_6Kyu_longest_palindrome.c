@@ -10,7 +10,7 @@ int longest_palindrome(const char *s)
 	int devided_queueX = 0, devided_queueY = 0;
 	int find_queueX = 0, find_queueY = 0;
 	int for_queueY = 1;
-	int answer_queue = 0, answer_Y = 0, answer = 0;
+	int answer_queue = 0, answer_Y = 0, answer = 1, answer_original = 0;
 	int answer_highest = 0, exception_highest = 0;
 
 	printf("-----------------------------------\n");
@@ -49,22 +49,41 @@ int longest_palindrome(const char *s)
 					// (char >= 1 이며) palindrome(회문)이 없는 경우에는 answer_highest == 1;
 					if (answer_queue == 1)
 					{
-						answer = 1;
-						if (answer > answer_highest)
-							answer_highest = answer;
+						printf(" (%d %d %d %d)\n", find_queueY, answer, answer_Y, answer_original);
+						answer_original = answer;
 						// palindrome(회문)이 있는 경우에는 answer_highest를 구함.
 						if (devided[find_queueX][for_queueY] != devided[find_queueX][answer_Y - 1])
 						{
-							// printf(" (%d %d %d)★%d★\n", for_queueY, find_queueY - 1, answer_queue, answer_Y);
+							printf(" (%d %d %d %d)\n", find_queueY, answer, answer_Y, answer_original);
 							answer = answer_Y + 1;
-							if (answer > answer_highest)
-								answer_highest = answer;
-							printf(" --> palindrome Found!! answer_highest's value: %d\n", answer_highest);
+							// answer와 answer_original을 비교했을 때, 2보다 크게면 palindrome(회문)이 아님.
+							// 이유는 answer_Y가 증감연산자이기 때문에 1단위로만 변하기 때문임.
+							if (answer - answer_original == 2)
+							{
+								if (answer > answer_highest)
+									answer_highest = answer;
+								printf(" ★%d %d %d %d★\n", find_queueY, answer, answer_Y, answer_original);
+								printf(" --> palindrome Found!! answer_highest's value: %d\n", answer_highest);
+							}
+							else
+							{
+								if (answer > answer_highest)
+									answer_highest = answer;
+								printf(" ♥%d %d %d %d♥\n", find_queueY, answer, answer_Y, answer_original);
+								printf("this is not palindrome\n");
+							}
 						}
+					}
+					// 딱 1글자만 입력됐을 때 단순하게 1을 return하는 예외처리.
+					if (strlen(s) == 1)
+					{
+						answer_highest = 1;
+						printf(" --> exception Found!! answer_highest's value: %d\n", answer_highest);
 					}
 					answer_Y = 0;
 				}
 			}
+			/*
 			// 특정 char이 반복되어 나올 때의 예외처리.
 			// 1) 시작점부터 char이 반복될 때. (aaaaab)
 			if (devided[find_queueX][slen] == devided[find_queueX][slen + 1])
@@ -72,7 +91,6 @@ int longest_palindrome(const char *s)
 				exception_highest = find_queueY + 1;
 				printf(" --> EX1)exception Found!! answer_highest's value: %d\n", exception_highest);
 			}
-			/*
 			// 2) n번째 부터 char이 반복될 때. (baaaaa)
 			if (devided[find_queueX][slen] == devided[find_queueX][slen - 1])
 			{
@@ -80,12 +98,6 @@ int longest_palindrome(const char *s)
 				printf(" --> EX2)exception Found!! answer_highest's value: %d\n", exception_highest);
 			}
 			*/
-			// 딱 1글자만 입력됐을 때 단순하게 1을 return하는 예외처리.
-			if (strlen(s) == 1)
-			{
-				answer_highest = 1;
-				printf(" --> exception Found!! answer_highest's value: %d\n", answer_highest);
-			}
 			if (devided[find_queueX][find_queueY] == ' ')
 			{
 				find_queueX++;
@@ -102,7 +114,7 @@ int longest_palindrome(const char *s)
 
 int main()
 {
-	char *s = "aaaaab";
+	char *s = "abthatba";
 	printf("The test string is: I like racecars that go fast\n");
 	longest_palindrome(s);
 
