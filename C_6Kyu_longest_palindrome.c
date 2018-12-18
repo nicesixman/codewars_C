@@ -10,7 +10,7 @@ int longest_palindrome(const char *s)
 	int devided_queueX = 0, devided_queueY = 0;
 	int find_queueX = 0, find_queueY = 0;
 	int for_queueY = 1;
-	int answer_queue = 0, answer_Y = 0, exception_answer_Y = 0, answer = 1, answer_original = 0;
+	int answer_queue = 0, answer_Y = 0, answer = 1, answer_original = 0;
 	int answer_highest = 0, exception_count = 1;
 	int result = 0;
 
@@ -82,7 +82,6 @@ int longest_palindrome(const char *s)
 						result = answer_highest;
 						printf(" --> exception Found!! answer_highest's value: %d\n", answer_highest);
 					}
-					exception_answer_Y = answer_Y;
 					answer_Y = 0;
 				}
 			}
@@ -90,7 +89,7 @@ int longest_palindrome(const char *s)
 			if (answer_highest == 0 && (devided[find_queueX][slen] == devided[find_queueX][slen + 1]))
 			{
 				exception_count++;
-				printf(" ■%d %d %d■\n", answer, answer_original, exception_answer_Y);
+				printf(" ■%d %d■\n", answer, answer_original);
 				printf(" --> EX1)exception Found!! exception_highest's value: %d %d\n", exception_count, answer);
 				result = exception_count;
 			}
@@ -112,8 +111,8 @@ int longest_palindrome(const char *s)
 int main()
 {
 	// 현재 simple test 미통과 사항은 2개 남음: baabcd, baablkj12345432133d
-	// 123454321 로만 돌리면 잘 되는 것을 보아, baab 부분에 뭔가 문제가 있는듯 싶다.
-	char *s = "I like racecars that go fast";
+	// 긴 문장 중 baab를 지우고 돌리면 잘 되는 것을 보아, baab 부분에 뭔가 문제가 있는듯 싶다.
+	char *s = "baablkj12345432133d";
 	printf("The test string is: I like racecars that go fast\n");
 	longest_palindrome(s);
 
