@@ -10,8 +10,9 @@ int longest_palindrome(const char *s)
 	int devided_queueX = 0, devided_queueY = 0;
 	int find_queueX = 0, find_queueY = 0;
 	int for_queueY = 1;
-	int answer_queue = 0, answer_Y = 0, answer = 1, answer_original = 0;
-	int answer_highest = 0, exception_highest = 0;
+	int answer_queue = 0, answer_Y = 0, exception_answer_Y = 0, answer = 1, answer_original = 0;
+	int answer_highest = 0, exception_count = 1;
+	int result = 0;
 
 	printf("-----------------------------------\n");
 	// C언어는 string을 지원 안하므로 2차원 배열을 이용하여 char별로 저장.
@@ -41,7 +42,7 @@ int longest_palindrome(const char *s)
 			{
 				answer_Y++;
 				// for_queueY의 위치에 따라 가변적으로 비교.
-				// (ex. char 7개 단어--> 1번째 char는 1~7 비교, 2번째 char는 2~7 비교, ..., 7번째 char는 7~7 비교.)
+				// (ex. char 7개 단어 --> 1번째 char는 1~7 비교, 2번째 char는 2~7 비교, ..., 7번째 char는 7~7 비교.)
 				if (devided[find_queueX][for_queueY] == devided[find_queueX][find_queueY - 1])
 				{
 					answer_queue = 0;
@@ -49,12 +50,12 @@ int longest_palindrome(const char *s)
 					// (char >= 1 이며) palindrome(회문)이 없는 경우에는 answer_highest == 1;
 					if (answer_queue == 1)
 					{
-						printf(" (%d %d %d %d)\n", find_queueY, answer, answer_Y, answer_original);
+						printf(" (%d %d %d)\n", answer, answer_original, answer_Y);
 						answer_original = answer;
 						// palindrome(회문)이 있는 경우에는 answer_highest를 구함.
 						if (devided[find_queueX][for_queueY] != devided[find_queueX][answer_Y - 1])
 						{
-							printf(" (%d %d %d %d)\n", find_queueY, answer, answer_Y, answer_original);
+							printf(" ((%d %d %d))\n", answer, answer_original, answer_Y);
 							answer = answer_Y + 1;
 							// answer와 answer_original을 비교했을 때, 2보다 크게면 palindrome(회문)이 아님.
 							// 이유는 answer_Y가 증감연산자이기 때문에 1단위로만 변하기 때문임.
@@ -62,14 +63,14 @@ int longest_palindrome(const char *s)
 							{
 								if (answer > answer_highest)
 									answer_highest = answer;
-								printf(" ★%d %d %d %d★\n", find_queueY, answer, answer_Y, answer_original);
+								result = answer_highest;
+								printf(" ★%d %d %d★\n", answer, answer_original, answer_Y);
 								printf(" --> palindrome Found!! answer_highest's value: %d\n", answer_highest);
 							}
 							else
 							{
-								if (answer > answer_highest)
-									answer_highest = answer;
-								printf(" ♥%d %d %d %d♥\n", find_queueY, answer, answer_Y, answer_original);
+								answer = 1;
+								printf(" ♥%d %d %d♥\n", answer, answer_original, answer_Y);
 								printf("this is not palindrome\n");
 							}
 						}
@@ -78,26 +79,21 @@ int longest_palindrome(const char *s)
 					if (strlen(s) == 1)
 					{
 						answer_highest = 1;
+						result = answer_highest;
 						printf(" --> exception Found!! answer_highest's value: %d\n", answer_highest);
 					}
+					exception_answer_Y = answer_Y;
 					answer_Y = 0;
 				}
 			}
-			/*
 			// 특정 char이 반복되어 나올 때의 예외처리.
-			// 1) 시작점부터 char이 반복될 때. (aaaaab)
-			if (devided[find_queueX][slen] == devided[find_queueX][slen + 1])
+			if (answer_highest == 0 && (devided[find_queueX][slen] == devided[find_queueX][slen + 1]))
 			{
-				exception_highest = find_queueY + 1;
-				printf(" --> EX1)exception Found!! answer_highest's value: %d\n", exception_highest);
+				exception_count++;
+				printf(" ■%d %d %d■\n", answer, answer_original, exception_answer_Y);
+				printf(" --> EX1)exception Found!! exception_highest's value: %d %d\n", exception_count, answer);
+				result = exception_count;
 			}
-			// 2) n번째 부터 char이 반복될 때. (baaaaa)
-			if (devided[find_queueX][slen] == devided[find_queueX][slen - 1])
-			{
-				exception_highest = find_queueY - 1;
-				printf(" --> EX2)exception Found!! answer_highest's value: %d\n", exception_highest);
-			}
-			*/
 			if (devided[find_queueX][find_queueY] == ' ')
 			{
 				find_queueX++;
@@ -109,12 +105,15 @@ int longest_palindrome(const char *s)
 		else
 			return 0;
 	}
-	return answer_highest;
+	printf("★★ >>>>> %d <<<<< ★★", result);
+	return result;
 }
 
 int main()
 {
-	char *s = "abthatba";
+	// 현재 simple test 미통과 사항은 2개 남음: baabcd, baablkj12345432133d
+	// 123454321 로만 돌리면 잘 되는 것을 보아, baab 부분에 뭔가 문제가 있는듯 싶다.
+	char *s = "I like racecars that go fast";
 	printf("The test string is: I like racecars that go fast\n");
 	longest_palindrome(s);
 
