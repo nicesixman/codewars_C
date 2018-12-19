@@ -121,7 +121,7 @@ int longest_palindrome(const char *s)
 
 int main()
 {
-	// 현재 simple test 미통과 사항은 1개 남음: baablkj12345432133d ('baab'는 해결함!)
+	// 현재 simple test 미통과 사항은 1개 남음: baablkj12345432133d ('baabcd'는 해결함!)
 	// 긴 문장 중 baab를 지우고 돌리면 잘 되는 것을 보면 특정 케이스에서 어딘가 조건문에 걸리지 않는 곳이 있나보다.
 	char *s = "baablkj12345432133d";
 	printf("The test string is: I like racecars that go fast\n");
