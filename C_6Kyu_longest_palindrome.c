@@ -11,7 +11,7 @@ int longest_palindrome(const char *s)
 	int find_queueX = 0, find_queueY = 0;
 	int for_queueY = 1;
 	int answer_queue = 0, answer_Y = 0, answer = 1, answer_original = 0;
-	int answer_highest = 0, exception_count = 1;
+	int answer_highest = 0, exception_count = 1, samechar_Y = 1;
 	int result = 0;
 
 	printf("-----------------------------------\n");
@@ -47,7 +47,6 @@ int longest_palindrome(const char *s)
 				{
 					answer_queue = 0;
 					answer_queue++;
-					// (char >= 1 이며) palindrome(회문)이 없는 경우에는 answer_highest == 1;
 					if (answer_queue == 1)
 					{
 						printf(" (%d %d %d)\n", answer, answer_original, answer_Y);
@@ -57,8 +56,8 @@ int longest_palindrome(const char *s)
 						{
 							printf(" ((%d %d %d))\n", answer, answer_original, answer_Y);
 							answer = answer_Y + 1;
-							// answer와 answer_original을 비교했을 때, 2보다 크게면 palindrome(회문)이 아님.
-							// 이유는 answer_Y가 증감연산자이기 때문에 1단위로만 변하기 때문임.
+							// answer와 answer_original을 비교했을 때, 차이가 2보다 크다면 palindrome(회문)이 아님.
+							// 이유는 answer_Y가 증감연산자이기 때문에 안쪽 for문을 도는동안 1단위로만 변하기 때문임.
 							if (answer - answer_original == 2)
 							{
 								if (answer > answer_highest)
@@ -69,8 +68,20 @@ int longest_palindrome(const char *s)
 							}
 							else
 							{
+								// 동일 char가 일정 구간동안만 반복될 때를 구함.
+								if (devided[find_queueX][for_queueY - samechar_Y] == devided[find_queueX][for_queueY])
+								{
+									samechar_Y = samechar_Y + 2;
+									if (answer > answer_highest)
+										answer_highest = answer;
+									result = answer_highest;
+									printf(" ★%d %d %d★\n", answer, answer_original, answer_Y);
+									printf(" --> palindrome Found!! answer_highest's value: %d\n", answer_highest);
+								}
+								// 최종적으로 회문이 아닌 것으로 판단.
 								answer = 1;
-								printf(" ♥%d %d %d♥\n", answer, answer_original, answer_Y);
+								result = answer_highest;
+								printf(" ♥%d %d♥\n", for_queueY, find_queueY);
 								printf("this is not palindrome\n");
 							}
 						}
@@ -110,8 +121,8 @@ int longest_palindrome(const char *s)
 
 int main()
 {
-	// 현재 simple test 미통과 사항은 2개 남음: baabcd, baablkj12345432133d
-	// 긴 문장 중 baab를 지우고 돌리면 잘 되는 것을 보아, baab 부분에 뭔가 문제가 있는듯 싶다.
+	// 현재 simple test 미통과 사항은 1개 남음: baablkj12345432133d ('baab'는 해결함!)
+	// 긴 문장 중 baab를 지우고 돌리면 잘 되는 것을 보면 특정 케이스에서 어딘가 조건문에 걸리지 않는 곳이 있나보다.
 	char *s = "baablkj12345432133d";
 	printf("The test string is: I like racecars that go fast\n");
 	longest_palindrome(s);
