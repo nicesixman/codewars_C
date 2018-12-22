@@ -8,7 +8,7 @@ int longest_palindrome(const char *s)
 	const char *copied = s;
 	char devided[1000][1000] = { '\0' }, nospace[10000] = { '\0' };
 	int devided_queueX = 0, devided_queueY = 0;
-	int nospace_last_char = 0, nospace_last_char_original = 0, perfect_palindrome = 0;
+	int nospace_last_char = 0, nospace_last_char_original = 0, space_count = 0, perfect_palindrome = 0;
 	int find_queueX = 0, find_queueY = 0;
 	int for_queueY = 1;
 	int answer_queue = 0, answer_Y = 0, answer = 1, answer_original = 0, samechar_count = 0;
@@ -30,7 +30,41 @@ int longest_palindrome(const char *s)
 		nospace[slen] = devided[devided_queueX][devided_queueY];		// 1차원 배열에도 저장
 		devided_queueY++;
 	}
-	// 다른 char이 덧붙여지지 않아 100% 대칭되는 경우를 먼저 구한다.
+	// 다른 char이 덧붙여질 경우, 앞/뒤 char를 하나씩 지워보며 모두 비교해보는 경우를 구한다.
+	// 앞부터 하나씩 지워보는 경우
+	for (int srmslen = 0; srmslen < (int)strlen(s) + 1; srmslen++)
+	{
+		nospace_last_char = 0;
+		// ★ 다른 char이 덧붙여지지 않아 100% 대칭되는 경우를 구해야 한다.
+		for (int sslen = srmslen; sslen < (int)strlen(s) + 1; sslen++)
+		{
+			nospace_last_char++;
+			printf("%c", nospace[sslen]);
+		}
+		printf("\n");
+		if (nospace[srmslen] == '\0')
+		{
+			nospace_last_char_original = srmslen;
+			space_count = nospace_last_char - 1;
+			break;
+		}
+	}
+	// 뒤부터 하나씩 지워보는 경우
+	for (int lrmslen = 56; lrmslen > 0; lrmslen--)
+	{
+		nospace_last_char = 0;
+		// ★ 다른 char이 덧붙여지지 않아 100% 대칭되는 경우를 구해야 한다.
+		for (int lslen = 0; lslen < lrmslen; lslen++)
+		{
+			nospace_last_char++;
+			printf("%c", nospace[lslen]);
+		}
+		printf("\n");
+	}
+	printf("★공백 개수: %d", space_count);
+	printf("글자 개수: %d★\n", nospace_last_char_original);
+	/*
+	// 다른 char이 덧붙여지지 않아 100% 대칭되는 경우를 구한다.
 	for (int slen = 0; slen < (int)strlen(s) + 1; slen++)
 	{
 		nospace_last_char++;
@@ -65,6 +99,7 @@ int longest_palindrome(const char *s)
 		if (perfect_palindrome == nospace_last_char_original / 2)
 			answer_highest = strlen(s);
 	}
+	*/
 
 	// 100% 대칭 문자열이 아닐 때의 palindrome(회문)을 찾아봄.
 	// 단어간 공백을 만나면 다음 2차 행렬로 넘어가고, null을 만나면 프로그램을 종료함.
@@ -182,15 +217,15 @@ int longest_palindrome(const char *s)
 
 int main()
 {
-	// Random Tests는 아직 Failed를 출력한다. (하단 문장 Expected 57, but Received 7)
-	// 내 코드 구조는 공백 단위를 띄어버리는데, 알고보니 공백 관계 없이 찾아야한다..
 	/*
-	zx6를 앞에 붙이면 완벽한 대칭이 되어 63을 Return 한다. (즉, 끝 3글자 빼고는 대칭이라 57을 return해야한다.)
-	주한님이 알려준 양쪽 와리가리 삭제를 참고하여 문자열의 제일 앞을 쭉 지워보고, 제일 뒤도 쭉 지워보는 알고리즘을 추가해보자.
+	// Random Tests는 아직 Failed를 출력한다. (하단 문장 Expected 57, but Received 7)
+	// 기존 코드 구조는 공백 단위를 띄어버리는데, 알고보니 공백 관계 없이 찾아야 해서 수정중.
+
+	하단 문자열은 zx6를 앞에 붙이면 완벽한 대칭이 되어 63을 Return 한다. (즉, 끝 3글자 빼고는 대칭이라 57을 return해야한다.)
 	(와리가리는 fail나면 좀 더 고려해보는걸로...)
 	추가적으로, return 값은 공백을 포함한 수치여야한다!!
 	*/
-	char *s = "7tgq1!0 zjavn829zfc 4qhahw99499whahq4 cfz928nvajz 0!1qgt7";
+	char *s = "7tgq1!0 zjavn829zfc 4qhahw99499whahq4 cfz928nvajz 0!1qgt76xz";
 	printf("The test string is: 7tgq1!0 zjavn829zfc 4qhahw99499whahq4 cfz928nvajz 0!1qgt76xz\n");
 	longest_palindrome(s);
 
