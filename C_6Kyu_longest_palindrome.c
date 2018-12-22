@@ -11,7 +11,7 @@ int longest_palindrome(const char *s)
 	int find_queueX = 0, find_queueY = 0;
 	int for_queueY = 1;
 	int answer_queue = 0, answer_Y = 0, answer = 1, answer_original = 0, samechar_count = 0;
-	int answer_highest = 0, exception_count = 1, samechar_Y = 1;
+	int answer_highest = 1, exception_count = 1, samechar_Y = 1;
 	int result = 0;
 
 	printf("-----------------------------------\n");
@@ -37,6 +37,7 @@ int longest_palindrome(const char *s)
 		printf(" (%d %d)\n", find_queueX, find_queueY);
 		if (devided[find_queueX][find_queueY] != '\0')
 		{
+			exception_count = 1;
 			find_queueY++;
 			// for_queueY 번째의 char까지 도달하는동안 모든 문자를 비교.
 			for (for_queueY=0; for_queueY<find_queueY; for_queueY++)
@@ -50,12 +51,10 @@ int longest_palindrome(const char *s)
 					answer_queue++;
 					if (answer_queue == 1)
 					{
-						// printf(" (%d %d)\n", find_queueX, for_queueY);
 						answer_original = answer;
 						// palindrome(회문)이 있는 경우에는 answer_highest를 구함.
 						if (devided[find_queueX][for_queueY] != devided[find_queueX][answer_Y - 1])
 						{
-							// printf(" ((%d %d))\n", find_queueX, for_queueY);
 							answer = answer_Y + 1;
 							// answer와 answer_original을 비교했을 때, 차이가 2보다 크다면 palindrome(회문)이 아님.
 							// 이유는 answer_Y가 증감연산자이기 때문에 안쪽 for문을 도는동안 1단위로만 변하기 때문임.
@@ -66,7 +65,7 @@ int longest_palindrome(const char *s)
 								if (exception_count > answer_highest)
 									answer_highest = exception_count;
 								result = answer_highest;
-								// printf(" ★%d %d %d★\n", answer, answer_original, answer_Y);
+								printf(" ★%d %d %d★\n", answer, answer_original, answer_Y);
 								printf(" --> palindrome Found!! answer_highest's value: %d\n", answer_highest);
 							}
 							else
@@ -80,13 +79,12 @@ int longest_palindrome(const char *s)
 									if (exception_count > answer_highest)
 										answer_highest = exception_count;
 									result = answer_highest;
-									// printf(" ★%d %d %d★\n", answer, answer_original, answer_Y);
-									printf(" --> palindrome Found!! answer_highest's value: %d\n", answer_highest);
+									printf(" ★%d %d %d★\n", answer, answer_original, answer_Y);
+									printf(" --> same char palindrome Found!! answer_highest's value: %d\n", answer_highest);
 								}
 								// 최종적으로 회문이 아닌 것으로 판단.
 								answer = 1;
 								result = answer_highest;
-								printf("this is not palindrome\n");
 							}
 						}
 						// 정확한 이유는 모르겠지만 간혹 위 if문에 다 걸리지 않는 경우가 발생한다.
@@ -94,9 +92,11 @@ int longest_palindrome(const char *s)
 						else
 						{
 							samechar_count++;
-							// ★ 이 부근에서 뭔가 잘 처리해보면 될 것 같다.
+							if (find_queueX > 0 && find_queueY == 1)
+								samechar_count = 1;
 							if (find_queueY != samechar_count)
 							{
+								exception_count++;
 								answer = answer_Y + 1;
 								samechar_count = find_queueY;
 								if (answer > answer_highest)
@@ -104,9 +104,12 @@ int longest_palindrome(const char *s)
 								if (exception_count > answer_highest)
 									answer_highest = exception_count;
 								result = answer_highest;
-								// printf(" ★%d %d %d★\n", answer, answer_original, answer_Y);
+								printf(" ★%d %d %d★\n", find_queueY, for_queueY, samechar_count);
 								printf(" --> exception palindrome Found!! answer_highest's value: %d\n", answer_highest);
 							}
+							// 동일한 char 사이에 다른 char가 존재할 경우, 아직 계산 오류가 나는 상태이므로 해결이 필요하다.
+							if (devided[find_queueX][samechar_count - 1] != devided[find_queueX][samechar_count])
+								printf(" Hi Another Word %d %d %d\n", find_queueY, for_queueY, samechar_count);
 						}
 					}
 					// 딱 1글자만 입력됐을 때 단순하게 1을 return하는 예외처리.
@@ -119,14 +122,15 @@ int longest_palindrome(const char *s)
 					answer_Y = 0;
 				}
 			}
+			/*
 			// 특정 char이 반복되어 나올 때의 예외처리.
-			if (answer_highest == 0 && (devided[find_queueX][slen] == devided[find_queueX][slen + 1]))
+			if (answer_highest == 0 && (devided[find_queueX][find_queueY - 1] == devided[find_queueX][find_queueY]))
 			{
 				exception_count++;
-				// printf(" (%d %d)\n", find_queueX, for_queueY);
-				printf(" --> EX1)exception Found!! exception_highest's value: %d\n", exception_count);
+				printf(" --> EX1)exception Found!! exception_highest's value: %d %d\n", exception_count, find_queueY);
 				result = exception_count;
 			}
+			*/
 			if (devided[find_queueX][find_queueY] == ' ')
 			{
 				find_queueX++;
@@ -144,10 +148,11 @@ int longest_palindrome(const char *s)
 
 int main()
 {
-	// Random Tests는 아직 Failed를 출력한다. (I like racecars that go fast 입력 시 뭔가 정반대로 계산하는 느낌.)
-	// Sample Tests는 전부 통과하니 ★표시 부분 근처를 좀 더 다듬어보자.
-	char *s = "I like racecars that go fast";
-	printf("The test string is: I like racecars that go fast\n");
+	// Random Tests는 아직 Failed를 출력한다. (하단 문장 Expected 57, but Received 7)
+	// 내 코드 구조는 공백 단위를 띄어버리는데, 알고보니 공백 관계 없이 찾아야한다..
+	char *s = "aabaa";
+	printf("The test string is: aabaa\n");
+	// printf("The test string is: 7tgq1!0 zjavn829zfc 4qhahw99499whahq4 cfz928nvajz 0!1qgt76xz\n");
 	longest_palindrome(s);
 
 	system("pause");
