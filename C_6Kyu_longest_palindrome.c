@@ -6,7 +6,7 @@ int longest_palindrome(const char *s)
 {
 	// 포인터 매개변수는 함수 내부/외부에서 모두 사용 가능.
 	const char *copied = s;
-	char devided[1000][1000] = { '\0' }, nospace[10000] = { '\0' };
+	char devided[1000][1000] = { '\0' }, nospace[10000] = { '\0' }, space_pos[1000] = { '\0' };
 	int devided_queueX = 0, devided_queueY = 0;
 	int nospace_last_char = 0, nospace_last_char_original = 0, space_count = 0, perfect_palindrome = 0;
 	int find_queueX = 0, find_queueY = 0;
@@ -23,6 +23,7 @@ int longest_palindrome(const char *s)
 		devided[devided_queueX][devided_queueY] = *copied++;
 		if (devided[devided_queueX][devided_queueY] == ' ')
 		{
+			space_pos[devided_queueX] = slen;
 			devided_queueX++;
 			devided_queueY = 0;
 			devided[devided_queueX][devided_queueY] = *copied++;		// x,0 공백 제거하며 저장
@@ -30,16 +31,26 @@ int longest_palindrome(const char *s)
 		nospace[slen] = devided[devided_queueX][devided_queueY];		// 1차원 배열에도 저장
 		devided_queueY++;
 	}
+
 	// 다른 char이 덧붙여질 경우, 앞/뒤 char를 하나씩 지워보며 모두 비교해보는 경우를 구한다.
-	// 앞부터 하나씩 지워보는 경우
-	for (int srmslen = 0; srmslen < (int)strlen(s) + 1; srmslen++)
+	for (int srmslen = 0; srmslen < (int)strlen(s); srmslen++)
 	{
 		nospace_last_char = 0;
-		// ★ 다른 char이 덧붙여지지 않아 100% 대칭되는 경우를 구해야 한다.
-		for (int sslen = srmslen; sslen < (int)strlen(s) + 1; sslen++)
+		printf("Basis strings: ");
+		// 앞부터 하나씩 지운다.
+		for (int sslen = srmslen; sslen < (int)strlen(s); sslen++)
 		{
 			nospace_last_char++;
 			printf("%c", nospace[sslen]);
+			/*
+			// Basis strings를 기반으로 뒤에서 하나씩 지운다.
+			for (int lslen = 0; lslen < lrmslen; lslen++)
+			{
+				nospace_last_char++;
+				printf("%c", nospace[lslen]);
+			}
+			*/
+			
 		}
 		printf("\n");
 		if (nospace[srmslen] == '\0')
@@ -49,10 +60,12 @@ int longest_palindrome(const char *s)
 			break;
 		}
 	}
+	/*
 	// 뒤부터 하나씩 지워보는 경우
-	for (int lrmslen = 56; lrmslen > 0; lrmslen--)
+	for (int lrmslen = nospace_last_char_original; lrmslen > 0; lrmslen--)
 	{
 		nospace_last_char = 0;
+		printf("Basis strings: ");
 		// ★ 다른 char이 덧붙여지지 않아 100% 대칭되는 경우를 구해야 한다.
 		for (int lslen = 0; lslen < lrmslen; lslen++)
 		{
@@ -61,7 +74,9 @@ int longest_palindrome(const char *s)
 		}
 		printf("\n");
 	}
+	*/
 	printf("★공백 개수: %d", space_count);
+	printf("공백 위치: %d %d %d %d", space_pos[0], space_pos[1], space_pos[2], space_pos[3]);
 	printf("글자 개수: %d★\n", nospace_last_char_original);
 	/*
 	// 다른 char이 덧붙여지지 않아 100% 대칭되는 경우를 구한다.
