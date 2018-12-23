@@ -6,9 +6,10 @@ int longest_palindrome(const char *s)
 {
 	// 포인터 매개변수는 함수 내부/외부에서 모두 사용 가능.
 	const char *copied = s;
-	char devided[1000][1000] = { '\0' }, nospace[10000] = { '\0' }, space_pos[1000] = { '\0' };
+	char devided[1000][1000] = { '\0' }, nospace[10000] = { '\0' }, nospace_realtime[10000] = { '\0' }, space_pos[1000] = { '\0' };
 	int devided_queueX = 0, devided_queueY = 0;
-	int nospace_last_char = 0, nospace_last_char_original = 0, space_count = 0, perfect_palindrome = 0;
+	int nospace_last_char = 0, nospace_first_pos = 0, nospace_char_total = 0;
+	int space_count = 0, perfect_palindrome = 0, is_pal_count = 0;
 	int find_queueX = 0, find_queueY = 0;
 	int for_queueY = 1;
 	int answer_queue = 0, answer_Y = 0, answer = 1, answer_original = 0, samechar_count = 0;
@@ -23,6 +24,7 @@ int longest_palindrome(const char *s)
 		devided[devided_queueX][devided_queueY] = *copied++;
 		if (devided[devided_queueX][devided_queueY] == ' ')
 		{
+			space_count++;
 			space_pos[devided_queueX] = slen;
 			devided_queueX++;
 			devided_queueY = 0;
@@ -31,88 +33,84 @@ int longest_palindrome(const char *s)
 		nospace[slen] = devided[devided_queueX][devided_queueY];		// 1차원 배열에도 저장
 		devided_queueY++;
 	}
+	nospace_char_total = (int)strlen(s) - space_count;
 
 	// 다른 char이 덧붙여질 경우, 앞/뒤 char를 하나씩 지워보며 모두 비교해보는 경우를 구한다.
-	for (int srmslen = 0; srmslen < (int)strlen(s); srmslen++)
+	for (int srmslen = 0; srmslen < nospace_char_total; srmslen++)
 	{
-		nospace_last_char = 0;
+		nospace_first_pos++;
 		printf("Basis strings: ");
 		// 앞부터 하나씩 지운다.
-		for (int sslen = srmslen; sslen < (int)strlen(s); sslen++)
+		for (int sslen = nospace_char_total; sslen > srmslen; sslen--)
 		{
-			nospace_last_char++;
-			printf("%c", nospace[sslen]);
-			/*
+			nospace_last_char = 0;
 			// Basis strings를 기반으로 뒤에서 하나씩 지운다.
-			for (int lslen = 0; lslen < lrmslen; lslen++)
+			for (int lslen = srmslen; lslen < sslen; lslen++)
 			{
 				nospace_last_char++;
-				printf("%c", nospace[lslen]);
+				nospace_realtime[lslen] = nospace[lslen];
+				printf("%c", nospace_realtime[lslen]);
 			}
-			*/
-			
-		}
-		printf("\n");
-		if (nospace[srmslen] == '\0')
-		{
-			nospace_last_char_original = srmslen;
-			space_count = nospace_last_char - 1;
-			break;
-		}
-	}
-	/*
-	// 뒤부터 하나씩 지워보는 경우
-	for (int lrmslen = nospace_last_char_original; lrmslen > 0; lrmslen--)
-	{
-		nospace_last_char = 0;
-		printf("Basis strings: ");
-		// ★ 다른 char이 덧붙여지지 않아 100% 대칭되는 경우를 구해야 한다.
-		for (int lslen = 0; lslen < lrmslen; lslen++)
-		{
-			nospace_last_char++;
-			printf("%c", nospace[lslen]);
+			if ((nospace_realtime[nospace_first_pos - 1] == nospace_realtime[sslen - 1]) && (nospace_first_pos - 1 != sslen - 1))
+			{
+				printf(" ★ %d, %d GOTCHAAAAAAA", nospace_first_pos - 1, sslen - 1);
+				for (int is_pal = 1; is_pal < (sslen / 2) + 1; is_pal++)
+				{
+					if (nospace_realtime[is_pal] == nospace[is_pal, sslen - 1 - is_pal])
+					{
+						is_pal_count++;
+						printf("\nis_pal: %d / rev Count: %d is same! go to NEXT", is_pal, sslen - 1 - is_pal);
+						if ((sslen - 1) / 2 == is_pal_count)
+						{
+							printf(" ★★★ YOU ARE REAL PALINDROME ★★★");
+						}
+					}
+				}
+			}
+			nospace_realtime[nospace_last_char] = '\0';
+			printf("\n");
 		}
 		printf("\n");
 	}
-	*/
 	printf("★공백 개수: %d", space_count);
-	printf("공백 위치: %d %d %d %d", space_pos[0], space_pos[1], space_pos[2], space_pos[3]);
-	printf("글자 개수: %d★\n", nospace_last_char_original);
+	printf("(공백 위치: %d %d %d %d)\n", space_pos[0], space_pos[1], space_pos[2], space_pos[3]);
+	printf("글자 개수: %d (총합: %d)★\n", nospace_char_total, nospace_char_total + space_count);
+
 	/*
 	// 다른 char이 덧붙여지지 않아 100% 대칭되는 경우를 구한다.
-	for (int slen = 0; slen < (int)strlen(s) + 1; slen++)
-	{
-		nospace_last_char++;
-		if (nospace[slen] == '\0')
-		{
-			nospace_last_char--;
-			nospace_last_char_original = nospace_last_char;
-			break;
-		}
-	}
 	// 짝수일 경우
 	if (nospace_last_char % 2 == 0)
 	{
-		for (int nslen = 0; nslen < nospace_last_char; nslen++)
+		for (int is_pal = 0; is_pal < nospace_last_char; is_pal++)
 		{
-			nospace_last_char--;
-			if (nospace[nslen] == nospace[nospace_last_char])
+			nospace_last_char_cal = nospace_last_char;
+			nospace_last_char_cal--;
+			if (nospace_realtime[is_pal] == nospace_realtime[nospace_last_char_cal])
+			{
 				perfect_palindrome++;
+				printf("R U HERE?");
+			}
+
 		}
-		if (perfect_palindrome == nospace_last_char_original/2)
-			answer_highest = strlen(s);
+		if (perfect_palindrome == nospace_char_total / 2)
+		{
+
+			answer_highest = nospace_last_char;
+		}
+
 	}
 	// 홀수일 경우
 	else if (nospace_last_char % 2 == 1)
 	{
-		for (int nslen = 0; nslen < nospace_last_char - 1; nslen++)
+		for (int is_pal = 0; is_pal < nospace_last_char - 1; is_pal++)
 		{
-			nospace_last_char--;
-			if (nospace[nslen] == nospace[nospace_last_char])
+			nospace_last_char_cal = nospace_last_char;
+			nospace_last_char_cal--;
+			if (nospace_realtime[is_pal] == nospace_realtime[nospace_last_char_cal])
 				perfect_palindrome++;
 		}
-		if (perfect_palindrome == nospace_last_char_original / 2)
-			answer_highest = strlen(s);
+		if (perfect_palindrome == nospace_char_total / 2)
+			answer_highest = nospace_last_char;
 	}
 	*/
 
