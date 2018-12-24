@@ -52,11 +52,13 @@ int longest_palindrome(const char *s)
 				nospace_realtime[lslen] = nospace[lslen];
 				printf("%c", nospace_realtime[lslen]);
 			}
+
 			if (nospace_last_char - find_space == space_pos[space_count - find_space])
 			{
 				printf(" ※SPACE: %d(%d Spaces) ", nospace_last_char - find_space, space_count - (find_space - 1));
 				find_space++;
 			}
+
 			// ★ 이 밑에부분 뭔가 수정이 필요할 듯 하다..
 			if ((nospace_realtime[nospace_first_pos - 1] == nospace_realtime[sslen - 1]) && (nospace_first_pos - 1 != sslen - 1))
 			{
@@ -93,8 +95,8 @@ int longest_palindrome(const char *s)
 	// 단어간 공백을 만나면 다음 2차 행렬로 넘어가고, null을 만나면 프로그램을 종료함.
 	for (int slen = 0; slen<(int)strlen(s); slen++)
 	{
-		printf("%c", devided[find_queueX][find_queueY]);
-		printf(" (%d %d)\n", find_queueX, find_queueY);
+		// printf("%c", devided[find_queueX][find_queueY]);
+		// printf(" (%d %d)\n", find_queueX, find_queueY);
 		if (devided[find_queueX][find_queueY] != '\0')
 		{
 			exception_count = 1;
@@ -126,7 +128,7 @@ int longest_palindrome(const char *s)
 								if (exception_count > answer_highest)
 									answer_highest = exception_count;
 								result = answer_highest;
-								printf(" --> palindrome Found!! answer_highest's value: %d\n", answer_highest);
+								// printf(" --> palindrome Found!! answer_highest's value: %d\n", answer_highest);
 							}
 							else
 							{
@@ -139,8 +141,8 @@ int longest_palindrome(const char *s)
 									if (exception_count > answer_highest)
 										answer_highest = exception_count;
 									result = answer_highest;
-									printf(" ★%d %d★\n", answer_highest, exception_count);
-									printf(" --> same char palindrome Found!! answer_highest's value: %d\n", answer_highest);
+									// printf(" ★%d %d★\n", answer_highest, exception_count);
+									// printf(" --> same char palindrome Found!! answer_highest's value: %d\n", answer_highest);
 								}
 								answer = 1;
 								result = answer_highest;
@@ -163,8 +165,8 @@ int longest_palindrome(const char *s)
 								if (exception_count > answer_highest)
 									answer_highest = exception_count;
 								result = answer_highest;
-								printf(" ★%d %d★\n", answer_highest, exception_count);
-								printf(" --> palindrome Found!! answer_highest's value: %d\n", answer_highest);
+								// printf(" ★%d %d★\n", answer_highest, exception_count);
+								// printf(" --> palindrome Found!! answer_highest's value: %d\n", answer_highest);
 							}
 						}
 					}
@@ -182,7 +184,7 @@ int longest_palindrome(const char *s)
 			if (devided[find_queueX][slen] == devided[find_queueX][slen - 1])
 			{
 				exception_count++;
-				printf(" --> EX1)exception Found!! exception_highest's value: %d %d\n", exception_count, find_queueY);
+				// printf(" --> EX1)exception Found!! exception_highest's value: %d %d\n", exception_count, find_queueY);
 				if (answer > answer_highest)
 					answer_highest = answer;
 				if (exception_count > answer_highest)
@@ -199,7 +201,7 @@ int longest_palindrome(const char *s)
 		else
 			return 0;
 	}
-	printf("★★ >>>>> %d <<<<< ★★", result);
+	printf("★★ >>>>> result(return): %d <<<<< ★★", result);
 	return result;
 }
 
@@ -207,11 +209,11 @@ int main()
 {
 	/*
 	// Basic Tests 중 baa가 failed. 이유를 찾아봐야 한다..
-	// Random Tests 중에서는 lslen = 2 일때부터 제대로 계산이 되지 않고 있다. line 60 근처에서 해결점이 필요해보임.
+	// Random Tests 중에서는 lslen = 2 일때부터 제대로 계산이 되지 않고 있다. line 71 근처에서 해결점이 필요해보임.
 	*/
-	char *s = "71tgq1!0 zjavn829zfc 4qhahw99499whahq4 cfz928nvajz 0!1qgt76xz";
-	// m8xka.1s88eq9mh?lh9safq1091g!xv2mz4qpeagiq7mp2qrq2pm7qigaepq4zm2vx!g1901qfas9hl?hm9qe88nm 
-	printf("The test string is: 7tgq1!0 zjavn829zfc 4qhahw99499whahq4 cfz928nvajz 0!1qgt76xz\n");
+	char *s = "7tgq1!0 zjavn829zfc 4qhahw99499whahq4 cfz928nvajz 0!1qgt76xz";
+	// another test: m8xka.1s88eq9mh?lh9safq1091g!xv2mz4qpeagiq7mp2qrq2pm7qigaepq4zm2vx!g1901qfas9hl?hm9qe88nm 
+	printf("The test string is: 7tgq1!0 zjavn829zfc 4qhahw994499whahq4 cfz928nvajz 0!1qgt76xz\n");
 	longest_palindrome(s);
 
 	system("pause");
