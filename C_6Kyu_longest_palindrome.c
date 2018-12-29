@@ -14,13 +14,15 @@ int longest_palindrome(const char *s)
 	int for_queueY = 1;
 	int answer_queue = 0, answer_Y = 0, answer = 1, answer_original = 0, samechar_count = 0;
 	int answer_highest = 1, exception_count = 1, samechar_Y = 1;
-	int result = 0;
+	int result_highest = 0, result = 0;
 
 	printf("-----------------------------------\n");
-	// C언어는 string을 지원 안하므로 2차원 배열을 이용하여 char별로 저장.
 	// 공백 개수를 포함한 char 개수만큼 for문 반복.
 	for (int slen = 0; slen<(int)strlen(s); slen++)
 	{
+		nospace[slen] = *copied++;		// 1차원 배열에 저장 (공백 포함)
+		// 2차원 배열을 이용하여 char별로 저장.
+		/*
 		devided[devided_queueX][devided_queueY] = *copied++;
 		if (devided[devided_queueX][devided_queueY] == ' ')
 		{
@@ -30,8 +32,8 @@ int longest_palindrome(const char *s)
 			devided_queueY = 0;
 			devided[devided_queueX][devided_queueY] = *copied++;		// x,0 공백 제거하며 저장
 		}
-		nospace[slen] = devided[devided_queueX][devided_queueY];		// 1차원 배열에도 저장
 		devided_queueY++;
+		*/
 	}
 	nospace_char_total = (int)strlen(s) - space_count;
 
@@ -52,33 +54,42 @@ int longest_palindrome(const char *s)
 				nospace_realtime[lslen] = nospace[lslen];
 				printf("%c", nospace_realtime[lslen]);
 			}
-
-			if (nospace_last_char - find_space == space_pos[space_count - find_space])
-			{
-				printf(" ※SPACE: %d(%d Spaces) ", nospace_last_char - find_space, space_count - (find_space - 1));
-				find_space++;
-			}
-
-			// ★ 이 밑에부분 뭔가 수정이 필요할 듯 하다..
 			if ((nospace_realtime[nospace_first_pos - 1] == nospace_realtime[sslen - 1]) && (nospace_first_pos - 1 != sslen - 1))
 			{
 				printf(" ★ %d, %d GOTCHAAAAAAA", nospace_first_pos - 1, sslen - 1);
+				is_pal_count = 0;
 				for (int is_pal = 1; is_pal < (sslen / 2) + 1; is_pal++)
 				{
-					if (nospace_realtime[is_pal] == nospace[is_pal, sslen - 1 - is_pal])
+					if (nospace_realtime[nospace_first_pos - 1 + is_pal] == nospace_realtime[sslen - 1 - is_pal])
 					{
 						is_pal_count++;
-						printf("\nis_pal: %d / rev Count: %d is same! go to NEXT", is_pal, sslen - 1 - is_pal);
-						if ((sslen - 1) / 2 == is_pal_count)
+						printf("\nis_pal: %d / rev Count: %d is same! go to NEXT", nospace_first_pos - 1 + is_pal, sslen - 1 - is_pal);
+						if (((sslen - 1) - (nospace_first_pos - 1)) / 2 == is_pal_count)
 						{
 							printf(" ★★★ YOU ARE REAL PALINDROME ★★★");
-							printf(" chars: %d, spaces: %d", is_pal * 2 + 1, space_count - (find_space - 1));
 							// 홀수일 때.
-							answer_highest = (is_pal * 2 + 1) + (space_count - (find_space - 1));
+							if ((nospace_first_pos - 1 + is_pal) == (sslen - 1 - is_pal))
+							{
+								result = ((((sslen - 1) - (nospace_first_pos - 1)) / 2) * 2) + 1;
+								if (result > result_highest)
+									result_highest = result;
+								printf(" result: %d / result_highest: %d", result, result_highest);
+							}
 							// 짝수일 때.
-							if (sslen - 1 - is_pal > is_pal)
-								answer_highest = (is_pal * 2 + 1) + (space_count - (find_space - 1)) + 1;
+							else if ((nospace_first_pos - 1 + is_pal) != (sslen - 1 - is_pal))
+							{
+								result = ((((sslen - 1) - (nospace_first_pos - 1)) / 2) + 1) * 2;
+								if (result > result_highest)
+									result_highest = result;
+								printf(" result: %d / result_highest: %d", result, result_highest);
+							}
+							break;
 						}
+					}
+					else
+					{
+						printf("\nis_pal: %d / rev Count: %d is not same! BREAK", nospace_first_pos - 1 + is_pal, sslen - 1 - is_pal);
+						break;
 					}
 				}
 			}
@@ -87,10 +98,10 @@ int longest_palindrome(const char *s)
 		}
 		printf("\n");
 	}
-	printf("★공백 개수: %d", space_count);
-	printf("(공백 위치: %d %d %d %d)\n", space_pos[0], space_pos[1], space_pos[2], space_pos[3]);
-	printf("글자 개수: %d (총합: %d)★\n", nospace_char_total, nospace_char_total + space_count);
+	printf("★★ >>>>> result(return): %d <<<<< ★★", result_highest);
+	return result_highest;
 
+	/* ★ 공백을 기준으로 잘라서 단어를 기반으로 걸러낼 때의 코드. (2차원 배열 기반)
 	// 100% 대칭 문자열이 아닐 때의 palindrome(회문)을 찾아봄.
 	// 단어간 공백을 만나면 다음 2차 행렬로 넘어가고, null을 만나면 프로그램을 종료함.
 	for (int slen = 0; slen<(int)strlen(s); slen++)
@@ -203,15 +214,15 @@ int longest_palindrome(const char *s)
 	}
 	printf("★★ >>>>> result(return): %d <<<<< ★★", result);
 	return result;
+	*/
 }
 
 int main()
 {
 	/*
-	// Basic Tests 중 baa가 failed. 이유를 찾아봐야 한다..
-	// Random Tests 중에서는 lslen = 2 일때부터 제대로 계산이 되지 않고 있다. line 71 근처에서 해결점이 필요해보임.
+	// Basic Tests 중 a, aa, baa가 failed. 동일문자 2개 이하인 경우 예외처리가 필요할 듯 하다.
 	*/
-	char *s = "7tgq1!0 zjavn829zfc 4qhahw99499whahq4 cfz928nvajz 0!1qgt76xz";
+	char *s = "m8xka.1s88eq9mh?lh9safq1091g!xv2mz4qpeagiq7mp2qrq2pm7qigaepq4zm2vx!g1901qfas9hl?hm9qe88nm";
 	// another test: m8xka.1s88eq9mh?lh9safq1091g!xv2mz4qpeagiq7mp2qrq2pm7qigaepq4zm2vx!g1901qfas9hl?hm9qe88nm 
 	printf("The test string is: 7tgq1!0 zjavn829zfc 4qhahw994499whahq4 cfz928nvajz 0!1qgt76xz\n");
 	longest_palindrome(s);
