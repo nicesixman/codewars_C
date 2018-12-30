@@ -6,21 +6,27 @@ int longest_palindrome(const char *s)
 {
 	// 포인터 매개변수는 함수 내부/외부에서 모두 사용 가능.
 	const char *copied = s;
-	char devided[1000][1000] = { '\0' }, nospace[10000] = { '\0' }, nospace_realtime[10000] = { '\0' }, space_pos[1000] = { '\0' };
+	// 1차원 배열 기반으로 공백을 포함하여 걸러낼 때 필요한 변수들.
+	char nospace[10000] = { '\0' }, nospace_realtime[10000] = { '\0' };
+	int is_pal_count = 0;
+	int nospace_first_pos = 0, nospace_char_total = 0;
+	int result = 0, result_highest = 1;
+	int space_count = 0;
+	// 2차원 배열 기반으로 공백을 기준으로 잘라서 단어를 기반으로 걸러낼 때 필요한 변수들.
+	/*
+	char devided[1000][1000] = { '\0' }, space_pos[1000] = { '\0' };
 	int devided_queueX = 0, devided_queueY = 0;
-	int nospace_last_char = 0, nospace_first_pos = 0, nospace_char_total = 0;
-	int space_count = 0, perfect_palindrome = 0, is_pal_count = 0;
-	int find_queueX = 0, find_queueY = 0, find_space = 1;
-	int for_queueY = 1;
-	int answer_queue = 0, answer_Y = 0, answer = 1, answer_original = 0, samechar_count = 0;
-	int answer_highest = 1, exception_count = 1, samechar_Y = 1;
-	int result_highest = 0, result = 0;
+	int find_queueX = 0, find_queueY = 0, for_queueY = 1;
+	int samechar_count = 0, samechar_Y = 1;
+	int answer_queue = 0, answer_Y = 0, answer_original = 0;
+	int answer = 1, answer_highest = 1, exception_count = 1;
+	*/
 
-	printf("-----------------------------------\n");
+	printf("--------------------------------------------------\n");
 	// 공백 개수를 포함한 char 개수만큼 for문 반복.
-	for (int slen = 0; slen<(int)strlen(s); slen++)
+	for (int slen = 0; slen < (int)strlen(s); slen++)
 	{
-		nospace[slen] = *copied++;		// 1차원 배열에 저장 (공백 포함)
+		nospace[slen] = *copied++;
 		// 2차원 배열을 이용하여 char별로 저장.
 		/*
 		devided[devided_queueX][devided_queueY] = *copied++;
@@ -41,16 +47,13 @@ int longest_palindrome(const char *s)
 	for (int srmslen = 0; srmslen < nospace_char_total; srmslen++)
 	{
 		nospace_first_pos++;
-		find_space = 1;
 		printf("Basis strings: ");
 		// 앞부터 하나씩 지운다.
 		for (int sslen = nospace_char_total; sslen > srmslen; sslen--)
 		{
-			nospace_last_char = 0;
 			// Basis strings를 기반으로 뒤에서 하나씩 지운다.
 			for (int lslen = srmslen; lslen < sslen; lslen++)
 			{
-				nospace_last_char++;
 				nospace_realtime[lslen] = nospace[lslen];
 				printf("%c", nospace_realtime[lslen]);
 			}
@@ -63,7 +66,7 @@ int longest_palindrome(const char *s)
 					if (nospace_realtime[nospace_first_pos - 1 + is_pal] == nospace_realtime[sslen - 1 - is_pal])
 					{
 						is_pal_count++;
-						printf("\nis_pal: %d / rev Count: %d is same! go to NEXT", nospace_first_pos - 1 + is_pal, sslen - 1 - is_pal);
+						printf("\nis_pal: %d / rev Count: %d are same! go to NEXT", nospace_first_pos - 1 + is_pal, sslen - 1 - is_pal);
 						if (((sslen - 1) - (nospace_first_pos - 1)) / 2 == is_pal_count)
 						{
 							printf(" ★★★ YOU ARE REAL PALINDROME ★★★");
@@ -73,7 +76,6 @@ int longest_palindrome(const char *s)
 								result = ((((sslen - 1) - (nospace_first_pos - 1)) / 2) * 2) + 1;
 								if (result > result_highest)
 									result_highest = result;
-								printf(" result: %d / result_highest: %d", result, result_highest);
 							}
 							// 짝수일 때.
 							else if ((nospace_first_pos - 1 + is_pal) != (sslen - 1 - is_pal))
@@ -81,30 +83,73 @@ int longest_palindrome(const char *s)
 								result = ((((sslen - 1) - (nospace_first_pos - 1)) / 2) + 1) * 2;
 								if (result > result_highest)
 									result_highest = result;
-								printf(" result: %d / result_highest: %d", result, result_highest);
 							}
 							break;
 						}
 					}
 					else
 					{
-						printf("\nis_pal: %d / rev Count: %d is not same! BREAK", nospace_first_pos - 1 + is_pal, sslen - 1 - is_pal);
+						printf("\nis_pal: %d / rev Count: %d are not same! BREAK", nospace_first_pos - 1 + is_pal, sslen - 1 - is_pal);
 						break;
 					}
 				}
 			}
-			nospace_realtime[nospace_last_char] = '\0';
 			printf("\n");
 		}
-		printf("\n");
+	}
+
+	if ((int)strlen(s) == 0)
+	{
+		printf("EXCEPTION! char *s is an empty!\n");
+		result_highest = 0;
+	}
+	else if ((int)strlen(s) == 1)
+	{
+		printf("EXCEPTION! char *s is a single char.\n");
+		result_highest = 1;
+	}
+	else if ((int)strlen(s) == 2)
+	{
+		if (nospace[0] == nospace[1])
+		{
+			printf("[0] and [1] are same! ★★★ YOU ARE REAL PALINDROME ★★★\n");
+			result_highest = 2;
+		}
+		else if (nospace[0] != nospace[1])
+		{
+			printf("[0] and [1] are not same!\n");
+			result_highest = 1;
+		}
+	}
+	else if ((int)strlen(s) == 3)
+	{
+		if (nospace[0] == nospace[2])
+		{
+			printf("★★★ YOU ARE REAL PALINDROME ★★★(EXCEPTION)\n");
+			result_highest = 3;
+		}
+		else if (nospace[0] != nospace[2])
+		{
+			if (nospace[0] == nospace[1] || nospace[1] == nospace[2])
+			{
+				printf("★★★ YOU ARE REAL PALINDROME ★★★(EXCEPTION)\n");
+				result_highest = 2;
+			}
+			else
+			{
+				printf("EXCEPTION! you are not palindrome.\n");
+				result_highest = 1;
+			}
+		}
 	}
 	printf("★★ >>>>> result(return): %d <<<<< ★★", result_highest);
 	return result_highest;
 
-	/* ★ 공백을 기준으로 잘라서 단어를 기반으로 걸러낼 때의 코드. (2차원 배열 기반)
+	// 공백을 기준으로 잘라서 단어를 기반으로 걸러낼 때의 코드. (2차원 배열 기반)
 	// 100% 대칭 문자열이 아닐 때의 palindrome(회문)을 찾아봄.
 	// 단어간 공백을 만나면 다음 2차 행렬로 넘어가고, null을 만나면 프로그램을 종료함.
-	for (int slen = 0; slen<(int)strlen(s); slen++)
+	/*
+	for (int slen = 0; slen < (int)strlen(s); slen++)
 	{
 		// printf("%c", devided[find_queueX][find_queueY]);
 		// printf(" (%d %d)\n", find_queueX, find_queueY);
@@ -113,7 +158,7 @@ int longest_palindrome(const char *s)
 			exception_count = 1;
 			find_queueY++;
 			// for_queueY 번째의 char까지 도달하는동안 모든 문자를 비교.
-			for (for_queueY = 0; for_queueY<find_queueY; for_queueY++)
+			for (for_queueY = 0; for_queueY < find_queueY; for_queueY++)
 			{
 				answer_Y++;
 				// find_queueY, for_queueY의 위치에 따라 가변적으로 비교.
@@ -146,7 +191,6 @@ int longest_palindrome(const char *s)
 								// 동일 char가 일정 구간동안만 반복될 때를 구함.
 								if (devided[find_queueX][for_queueY - samechar_Y] == devided[find_queueX][for_queueY])
 								{
-									samechar_Y = samechar_Y + 2;
 									if (answer > answer_highest)
 										answer_highest = answer;
 									if (exception_count > answer_highest)
@@ -219,12 +263,8 @@ int longest_palindrome(const char *s)
 
 int main()
 {
-	/*
-	// Basic Tests 중 a, aa, baa가 failed. 동일문자 2개 이하인 경우 예외처리가 필요할 듯 하다.
-	*/
-	char *s = "m8xka.1s88eq9mh?lh9safq1091g!xv2mz4qpeagiq7mp2qrq2pm7qigaepq4zm2vx!g1901qfas9hl?hm9qe88nm";
-	// another test: m8xka.1s88eq9mh?lh9safq1091g!xv2mz4qpeagiq7mp2qrq2pm7qigaepq4zm2vx!g1901qfas9hl?hm9qe88nm 
-	printf("The test string is: 7tgq1!0 zjavn829zfc 4qhahw994499whahq4 cfz928nvajz 0!1qgt76xz\n");
+	char *s = "7tgq1!0 zjavn829zfc 4qhahw99499whahq4 cfz928nvajz 0!1qgt76xz";
+	printf("The test string is: 7tgq1!0 zjavn829zfc 4qhahw99499whahq4 cfz928nvajz 0!1qgt76xz\n");
 	longest_palindrome(s);
 
 	system("pause");
